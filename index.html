@@ -141,9 +141,10 @@ mark{background:linear-gradient(transparent 62%,var(--st-mark) 62%,var(--st-mark
 /* prototype */
 .au-proto-h{text-align:center;max-width:720px;margin:0 auto}
 .au-proto-h p{font-size:clamp(17px,1.7vw,21px);color:var(--st-ink2);margin:14px 0 0}
-.au-seg{display:flex;gap:4px;justify-content:center;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.au-seg{display:flex;gap:2px;justify-content:flex-start;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
 .au-seg::-webkit-scrollbar{display:none}
-.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:980px;cursor:pointer;white-space:nowrap}
+.au-seg > .au-chip:first-child{margin-left:auto}.au-seg > .au-chip:last-child{margin-right:auto} /* centred when it fits, scrolls from the first chip when it doesn't */
+.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 11px;border-radius:980px;cursor:pointer;white-space:nowrap}
 .au-chip:hover{color:var(--st-ink)}
 .au-chip.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .au-chip i{font-style:normal;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--st-hi);color:var(--st-accent)}
@@ -967,13 +968,13 @@ html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-ev
   "consent": "Consent",
   "supporter": "Supporter?",
   "signin": "Sign in",
-  "back": "Welcome back",
+  "back": "Signed in",
   "topics": "Topics",
   "edition": "Edition",
   "mission": "Mission",
   "paywall": "Paywall",
   "offer": "On close",
-  "register": "Free account"
+  "register": "Account"
  },
  "hero": [
   "mission",
@@ -1038,7 +1039,7 @@ html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-ev
    "why": "<b>Try</b> asking “Already a Guardian supporter?” right after consent, <b>because</b> most supporters pay on theguardian.com, and today they meet the paywall first, then a troubleshooting page.",
    "iv": "Registrations +10–20%",
    "il": "and no paywall for existing supporters",
-   "also": "Readers who don’t pay still register: see the last screen, <em>Free account</em>."
+   "also": "Readers who don’t pay still register: see the last screen, <em>Account</em>."
   },
   "signin": {
    "idea": 0,
