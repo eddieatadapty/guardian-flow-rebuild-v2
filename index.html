@@ -1,0 +1,1850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- flow-rebuild template (Growth Audit, v3: + walkthrough video, phone view/QR, localization, paywall today vs proposed). Replace every double-brace placeholder, everything between
+     the SCREENS markers, and the CONTENT json. Rules that brand-check.py enforces are marked RULE.
+     Reference builds: eddieatadapty.github.io/datacamp-flow-rebuild-v2 · bterzic123.github.io/planner5d-flow-rebuild-v2 -->
+<title>The Guardian Growth Audit</title>
+<meta name="description" content="Five ideas to turn more Guardian readers into supporters, each built into a clickable version of the Guardian app’s own onboarding. Prepared by Adapty.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- the APP's font (brand.json fonts, or the closest Google family) + a mono if the app shows code -->
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+/* BRAND:START — the only place the APP's colours are written as literals. Every value is from brand.json
+   (theguardian.com CSS tokens) or sampled off their own app screens (brand.json "sampled"). Used only inside the phone. */
+:root{
+  --b-primary:#052962;      /* navy: Continue button, masthead, My Guardian bar (--button-background-primary) */
+  --b-primary-ink:#ffffff;
+  --b-bg:#ffffff;
+  --b-surface:#f6f6f6;
+  --b-ink:#121212;
+  --b-ink2:#707070;
+  --b-line:#dcdcdc;
+  --b-accent2:#ffe500;      /* yellow: Support us pill, "Save on annual", paywall CTA */
+  --b-grad:linear-gradient(180deg,#c4cbdd 0%,#f7f5f8 30%,#f7f5f8 100%); /* welcome screen wash, sampled */
+  --b-radius:12px;
+  --b-pill:999px;
+  --b-blue:#0077b6;         /* paywall headline + selected plan border */
+  --b-card:#f4f9fd;         /* selected plan fill, sampled off their paywall */
+  --b-red:#c70000; --b-dred:#8b0000; --b-pink:#bb3b80; --b-tan:#866d50; --b-orange:#ff7f0f; --b-green:#0c7a73;
+  --b-hl:#fff4f2;           /* highlights card */
+  --b-nav:#041f4a;          /* masthead top bar */
+  --b-navline:#506991;      /* masthead lines, "Manage my choice" */
+  --b-grey:#acacac;         /* unselected plan border, sampled off their paywall */
+  --b-g1:#4285f4; --b-g2:#34a853; --b-g3:#fbbc05; --b-g4:#ea4335; /* Google mark, as on their sign-in page */
+  --b-font:'Source Sans 3',-apple-system,system-ui,sans-serif;   /* Guardian Text Sans (licensed) → closest Google family */
+  --b-mono:'Source Serif 4',Georgia,serif;                         /* GH Guardian Headline / Text Egyptian (licensed) → Source Serif 4 */
+}
+/* BRAND:END */
+/* Their second family, the headline serif, applied the way the template asks (.scr prefix beats the screens' shorthands) */
+.scr .gh,.scr .gh *{font-family:var(--b-mono)}
+
+/* ================= the audit page — Adapty's, not the app's. Light, Apple-style. ================= */
+:root{
+  color-scheme:light;
+  --st-ground:#f5f5f7; --st-card:#ffffff; --st-ink:#1d1d1f; --st-ink2:#6e6e73; --st-ink3:#86868b;
+  --st-hair:rgba(0,0,0,.09); --st-link:#0066cc;
+  --st-accent:#052962;      /* dark brand colour of the APP: buttons, the outcome band */
+  --st-hi:#ffe500;          /* bright brand colour of the APP: outcome numbers on the band, idea dots */
+  --st-mark:rgba(255,229,0,.6); /* --st-hi at ~.5 alpha: the highlighter under impact numbers */
+  --st-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+html,body{margin:0}
+body{background:var(--st-ground);color:var(--st-ink);font-family:var(--st-font);-webkit-font-smoothing:antialiased;font-size:17px;line-height:1.47}
+.au-wrap{max-width:1080px;margin:0 auto;padding-inline:22px}
+a{color:var(--st-link)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--st-link);outline-offset:3px;border-radius:6px}
+mark{background:linear-gradient(transparent 62%,var(--st-mark) 62%,var(--st-mark) 92%,transparent 92%);color:inherit;padding:0 .04em}
+
+/* nav */
+.au-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(245,245,247,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--st-hair)}
+.au-nav-in{max-width:1080px;margin:0 auto;padding-inline:22px;height:52px;display:flex;align-items:center;gap:26px}
+.au-brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.au-brand img{width:26px;height:26px;border-radius:7px;flex:none}
+.au-brand span{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.au-brand small{font-size:15px;font-weight:400;color:var(--st-ink2)}
+.au-nav a{font-size:13px;color:var(--st-ink);text-decoration:none;opacity:.82}
+.au-nav a:hover{opacity:1}
+@media (max-width:560px){.au-nav a.au-opt{display:none}.au-brand small{display:none}}
+
+/* hero */
+.au-top-hero{text-align:center;padding-top:clamp(56px,9vw,96px);overflow:hidden;position:relative}
+.au-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--st-ink);margin:0 0 14px}
+.au-eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-display{font-size:clamp(60px,12vw,120px);line-height:.98;font-weight:700;letter-spacing:-.05em;margin:0}
+.au-lede{font-size:clamp(23px,3.4vw,34px);line-height:1.16;font-weight:600;letter-spacing:-.022em;max-width:760px;margin:22px auto 0;text-wrap:balance}
+.au-lede span{color:var(--st-ink2)}
+.au-byline{font-size:14px;color:var(--st-ink3);margin:18px 0 0}
+.au-ctas{display:flex;gap:26px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.au-btn{display:inline-block;background:var(--st-accent);color:#fff;border-radius:980px;padding:12px 23px;font-size:17px;font-weight:500;text-decoration:none;border:0;cursor:pointer}
+.au-btn:hover{filter:brightness(1.25)}
+.au-lnk{background:none;border:0;padding:0;color:var(--st-link);font-size:17px;text-decoration:none;cursor:pointer}
+.au-lnk::after{content:"\00a0›"}
+.au-lnk:hover{text-decoration:underline}
+.au-phones{display:flex;justify-content:center;align-items:flex-start;margin-top:clamp(40px,6vw,64px);height:clamp(300px,52vw,560px)}
+.au-hp{flex:none;border:0;padding:0;background:none;cursor:pointer;width:27%;max-width:290px;margin:0 -2.5%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.au-hp img{display:block;width:100%;height:auto;filter:drop-shadow(0 28px 50px rgba(0,0,0,.2))}
+.au-hp.au-c{width:31%;max-width:330px;z-index:2}
+.au-hp.au-l{transform:translateY(12%) rotate(-5deg)}
+.au-hp.au-r{transform:translateY(12%) rotate(5deg)}
+.au-hp.au-l:hover{transform:translateY(9%) rotate(-5deg)}.au-hp.au-r:hover{transform:translateY(9%) rotate(5deg)}.au-hp.au-c:hover{transform:translateY(-3%)}
+
+/* sections */
+.au-sec{padding-block:clamp(72px,10vw,120px)}
+.au-sec.au-white{background:var(--st-card)}
+.au-kicker{font-size:15px;font-weight:600;color:var(--st-ink2);margin:0 0 12px}
+.au-h2{font-size:clamp(34px,5.2vw,56px);line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.au-h2 span{color:var(--st-ink3)}
+.au-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,80px);align-items:end}
+.au-split p{margin:0;font-size:clamp(17px,1.7vw,21px);line-height:1.45;color:var(--st-ink2);letter-spacing:-.01em}
+.au-split p b{color:var(--st-ink);font-weight:600}
+.au-split p + p{margin-top:16px}
+.au-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(48px,7vw,80px);border-top:1px solid var(--st-hair)}
+.au-stat{padding:28px 20px 0 0}
+.au-stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.au-stat span{display:block;font-size:15px;color:var(--st-ink2);margin-top:10px;max-width:22ch}
+.au-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(48px,7vw,72px)}
+.au-note h3{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0 0 8px}
+.au-note p{margin:0;font-size:15.5px;line-height:1.5;color:var(--st-ink2)}
+.au-note .au-ic{width:36px;height:36px;border-radius:10px;background:var(--st-ground);display:grid;place-items:center;margin-bottom:16px}
+.au-note .au-ic svg{width:19px;height:19px;stroke:var(--st-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ideas */
+.au-ideas-h{margin-bottom:clamp(32px,5vw,48px)}
+.au-list{background:var(--st-card);border-radius:28px;padding-inline:clamp(20px,4vw,44px)}
+.au-idea{display:grid;grid-template-columns:56px 1fr 220px;gap:20px;align-items:start;padding-block:clamp(26px,3.5vw,36px);border-top:1px solid var(--st-hair)}
+.au-idea:first-child{border-top:0}
+.au-idea .au-num{font-size:15px;font-weight:600;color:var(--st-ink3);font-variant-numeric:tabular-nums;padding-top:6px}
+.au-idea h3{font-size:clamp(21px,2.4vw,26px);line-height:1.2;font-weight:600;letter-spacing:-.022em;margin:0 0 8px}
+.au-idea p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--st-ink2);max-width:58ch}
+.au-idea p code{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--st-ink);background:var(--st-ground);padding:2px 7px;border-radius:6px}
+.au-idea .au-lnk{font-size:15px}
+.au-imp{text-align:right}
+.au-imp .au-v{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--st-accent)}
+.au-imp .au-l{font-size:13.5px;color:var(--st-ink2);margin-top:8px}
+.au-band{margin-top:20px;background:var(--st-accent);color:#fff;border-radius:28px;padding:clamp(32px,5vw,56px);display:grid;grid-template-columns:1fr auto;gap:clamp(28px,5vw,64px);align-items:center}
+.au-band .au-k{font-size:15px;font-weight:600;color:rgba(255,255,255,.62);margin:0 0 10px}
+.au-band h3{font-size:clamp(24px,3vw,32px);line-height:1.18;font-weight:600;letter-spacing:-.022em;margin:0;text-wrap:balance}
+.au-band .au-fn{font-size:13px;line-height:1.5;color:rgba(255,255,255,.55);margin:16px 0 0;max-width:52ch}
+.au-nums{display:flex;gap:clamp(28px,4vw,48px)}
+.au-nums small{display:block;font-size:13px;color:rgba(255,255,255,.62)}
+.au-nums b{display:block;font-size:clamp(48px,6.5vw,76px);font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-hi);font-variant-numeric:tabular-nums;margin:4px 0 8px}
+.au-nums span{font-size:14px;color:rgba(255,255,255,.8)}
+.au-band .au-btn{background:var(--st-hi);color:var(--st-accent);font-weight:600;margin-top:26px}
+
+/* prototype */
+.au-proto-h{text-align:center;max-width:720px;margin:0 auto}
+.au-proto-h p{font-size:clamp(17px,1.7vw,21px);color:var(--st-ink2);margin:14px 0 0}
+.au-seg{display:flex;gap:4px;justify-content:center;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.au-seg::-webkit-scrollbar{display:none}
+.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:980px;cursor:pointer;white-space:nowrap}
+.au-chip:hover{color:var(--st-ink)}
+.au-chip.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.au-chip i{font-style:normal;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--st-hi);color:var(--st-accent)}
+.au-stage{display:grid;grid-template-columns:auto minmax(0,420px);gap:clamp(32px,6vw,72px);justify-content:center;align-items:center;margin-top:clamp(28px,4vw,44px)}
+.phone{width:390px;height:844px;border-radius:56px;padding:10px;background:#0b0d10;box-shadow:0 0 0 1.5px #3a3d42,0 40px 90px rgba(0,0,0,.25);max-width:calc(100vw - 44px)}
+.phone-in{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--b-bg)}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:9}
+.sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 32px 0;font:600 15px -apple-system,system-ui,sans-serif;color:var(--b-ink);z-index:8;pointer-events:none}
+.au-pn{background:var(--st-ground);border-radius:28px;padding:clamp(26px,3.5vw,38px)}
+.au-pn-k{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--st-ink)}
+.au-pn-k i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-pn-k.au-ctx{color:var(--st-ink2)}.au-pn-k.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-pn-t{font-size:clamp(24px,2.6vw,30px);line-height:1.12;font-weight:700;letter-spacing:-.028em;margin:10px 0 14px;text-wrap:balance}
+.au-pn-h{margin:0;font-size:17px;line-height:1.55;color:var(--st-ink2)}
+.au-pn-h b{color:var(--st-ink);font-weight:600}
+.au-pn-o{margin-top:24px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-pn-o .au-lab{font-size:13px;font-weight:600;color:var(--st-ink3)}
+.au-pn-o .au-val{font-size:clamp(38px,4.4vw,50px);font-weight:700;letter-spacing:-.04em;line-height:1.05;color:var(--st-accent);margin-top:6px;font-variant-numeric:tabular-nums}
+.au-pn-o .au-sub{font-size:14px;color:var(--st-ink2);margin-top:4px}
+.au-pn-a{margin:18px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-pn-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid var(--st-hair);font-size:13px;color:var(--st-ink3)}
+.au-pn-nav button{background:var(--st-card);border:0;border-radius:980px;padding:8px 15px;font-size:14px;font-weight:500;color:var(--st-ink);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.au-pn-nav button:disabled{opacity:.35;cursor:default}
+.au-hint{text-align:center;font-size:14px;color:var(--st-ink3);margin:22px 0 0}
+
+/* footer */
+.au-foot{padding-block:56px 72px;border-top:1px solid var(--st-hair)}
+.au-foot details{border-bottom:1px solid var(--st-hair);padding-bottom:18px}
+.au-foot summary{cursor:pointer;font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.au-foot summary::-webkit-details-marker{display:none}
+.au-foot summary::after{content:"+";font-size:24px;font-weight:300;color:var(--st-ink2)}
+.au-foot details[open] summary::after{content:"−"}
+.au-srcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 48px;margin-top:18px}
+.au-srcs h4{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--st-ink3);margin:18px 0 6px}
+.au-srcs dl{margin:0}.au-srcs dt{font-size:14.5px;font-weight:600;margin-top:10px}
+.au-srcs dd{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-fine{font-size:12.5px;line-height:1.6;color:var(--st-ink3);margin:22px 0 0;max-width:80ch}
+.au-cta-line{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.au-cta-line p{margin:0;font-size:clamp(19px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;max-width:34ch}
+
+@media (max-width:900px){
+  .au-split,.au-band{grid-template-columns:1fr}
+  .au-notes{grid-template-columns:1fr}
+  .au-idea{grid-template-columns:40px 1fr}
+  .au-imp{grid-column:2;text-align:left;display:flex;align-items:baseline;gap:10px}
+  .au-imp .au-l{margin:0}
+  .au-imp .au-v{white-space:nowrap}
+  .au-stage{grid-template-columns:1fr;justify-items:center}
+  .au-pn{width:100%;max-width:520px}
+  .au-srcs{grid-template-columns:1fr}
+}
+@media (max-width:560px){.au-stats{grid-template-columns:1fr}.au-stat{padding:22px 0 0}.au-nums{flex-direction:column;gap:18px}}
+
+/* ================= extras (audit side): video, language, phone view + QR, paywall today vs proposed, ?tour ================= */
+[hidden]{display:none!important}
+/* the device never scrolls: off-screen slides would otherwise make it scrollable by focus / scrollIntoView */
+.phone-in,.scr{overflow:clip}
+/* hero: walkthrough link */
+.au-play::before{content:"▶";font-size:.72em;margin-right:7px;position:relative;top:-1px}
+/* video dialog */
+.au-vid{border:0;padding:0;background:transparent;max-width:min(1120px,94vw);width:100%;overflow:visible}
+.au-vid::backdrop{background:rgba(0,0,0,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.au-vid-in{background:#000;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.au-vid video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.au-vid-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 4px 0;font-size:14px}
+.au-vid-bar a{color:#fff;opacity:.85}
+.au-vid-x{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:980px;padding:8px 16px;font-size:14px;cursor:pointer}
+/* language switch */
+.au-langrow{display:flex;justify-content:center;align-items:center;gap:12px;margin:18px 0 0;font-size:13.5px;color:var(--st-ink2);flex-wrap:wrap}
+.au-lsw{display:inline-flex;gap:2px;padding:3px;background:var(--st-ground);border-radius:980px}
+.au-lsw button{border:0;background:none;padding:6px 13px;border-radius:980px;font-size:13.5px;font-weight:500;color:var(--st-ink2);cursor:pointer;white-space:nowrap}
+.au-lsw button.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* QR card (desktop) / full-screen button (phone) */
+.au-qr{display:flex;align-items:center;gap:18px;margin:26px auto 0;max-width:500px;background:var(--st-ground);border-radius:22px;padding:14px 22px 14px 14px}
+.au-qr img{width:112px;height:112px;border-radius:12px;image-rendering:pixelated;flex:none;background:#fff}
+.au-qr b{display:block;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.au-qr p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:var(--st-ink2)}
+.au-mobw{display:none;text-align:center;margin-top:22px}
+@media (max-width:900px){.au-qr{display:none}.au-mobw{display:block}}
+/* paywall: today vs proposed */
+.au-cmp{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr) minmax(0,290px);gap:clamp(24px,4vw,52px);align-items:center;margin-top:clamp(32px,5vw,52px)}
+.au-cmp figure{margin:0;text-align:center}
+.au-cmp figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 44px rgba(0,0,0,.18))}
+.au-cmp figcaption{margin-top:14px;font-size:15px;font-weight:600}
+.au-cmp figcaption span{color:var(--st-ink2);font-weight:400}
+.au-cmp-go{border:0;padding:0;background:none;cursor:pointer;display:block;width:100%;transition:transform .3s}
+.au-cmp-go:hover{transform:translateY(-4px)}
+.au-chg{list-style:none;margin:0;background:var(--st-card);border-radius:24px;padding:4px clamp(18px,2.4vw,28px)}
+.au-chg li{padding:15px 0;border-top:1px solid var(--st-hair)}
+.au-chg li:first-child{border-top:0}
+.au-chg h4{margin:0 0 7px;font-size:16px;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.au-chg h4 i{font-style:normal;font-size:12px;font-weight:600;color:var(--st-accent);background:var(--st-mark);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.au-was,.au-now{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:14.5px;line-height:1.42}
+.au-was{color:var(--st-ink3)}
+.au-now{color:var(--st-ink);margin-top:3px}
+.au-was em,.au-now em{font-style:normal;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.au-now em{color:var(--st-link)}
+.au-kept{margin:22px 0 0;font-size:14px;color:var(--st-ink2);text-align:center}
+@media (max-width:900px){.au-cmp{grid-template-columns:1fr 1fr;gap:18px}.au-chg{grid-column:1 / -1;order:3}.au-was,.au-now{grid-template-columns:70px 1fr}}
+
+/* ?app — the prototype full screen on a real phone, with a bar that opens the idea panel */
+html.appmode,html.appmode body{height:100%;overflow:hidden;background:#000}
+html.appmode .au-nav,html.appmode .au-top-hero,html.appmode #why,html.appmode #ideas,html.appmode #compare,html.appmode .au-foot,
+html.appmode .au-proto-h,html.appmode #prototype .au-langrow,html.appmode #chips,html.appmode .au-hint,html.appmode .au-qr,html.appmode .au-mobw{display:none!important}
+html.appmode #prototype{padding:0;background:#000}
+html.appmode #prototype .au-wrap{padding:0;max-width:none}
+html.appmode .au-stage{display:block;margin:0}
+html.appmode .phone{position:fixed;top:0;left:0;right:0;margin:0 auto;width:min(100%,480px);height:calc(100% - 56px - env(safe-area-inset-bottom,0px));max-width:none;border-radius:0;padding:0;box-shadow:none;background:#000}
+html.appmode .phone-in{border-radius:0}
+html.appmode .island,html.appmode .sbar{display:none}
+html.appmode .scr .s-pad{padding-top:max(58px,calc(env(safe-area-inset-top,0px) + 16px))}
+html.appmode .scr .s-x,html.appmode .scr .s-lang{top:max(54px,calc(env(safe-area-inset-top,0px) + 10px))}
+.au-appbar,.au-scrim{display:none}
+html.appmode .au-appbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 12px env(safe-area-inset-bottom,0px) 16px;align-items:center;gap:12px;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1);color:#fff}
+.au-ab-why{flex:1;min-width:0;display:flex;align-items:center;gap:9px;background:none;border:0;color:#fff;font-size:14px;font-weight:500;text-align:left;cursor:pointer;padding:0}
+.au-ab-why i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);flex:none}
+.au-ab-why span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.au-ab-why em{font-style:normal;color:rgba(255,255,255,.6);margin-left:auto;flex:none;font-size:13px}
+.au-appbar .au-lsw{background:rgba(255,255,255,.12)}
+.au-appbar .au-lsw button{color:rgba(255,255,255,.75);padding:5px 11px}
+.au-appbar .au-lsw button.on{background:#fff;color:#000}
+html.appmode #panel{position:fixed;left:0;right:0;bottom:0;z-index:80;max-width:none;width:auto;margin:0 auto;border-radius:24px 24px 0 0;max-height:78%;overflow:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.3,.7,.2,1);padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+html.appmode.au-open #panel{transform:none}
+html.appmode.au-open .au-scrim{display:block;position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.5)}
+
+/* ?tour — 1280×720 walkthrough frames (record-video.sh renders them into assets/walkthrough.mp4) */
+.au-tour{display:none}
+html.tourmode,html.tourmode body{overflow:hidden;background:var(--st-ground)}
+html.tourmode body *{visibility:hidden}
+html.tourmode .phone,html.tourmode .phone *,html.tourmode .au-tour,html.tourmode .au-tour *{visibility:visible}
+html.tourmode .phone{position:fixed;left:170px;top:44px;margin:0;transform:scale(.755);transform-origin:0 0;box-shadow:0 0 0 1.5px #3a3d42,0 34px 80px rgba(0,0,0,.22);z-index:5;max-width:none}
+html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-events:none;color:var(--st-ink)}
+.au-tb{position:absolute;left:590px;top:30px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.au-tb img{width:26px;height:26px;border-radius:7px}
+.au-tb small{font-size:16px;font-weight:400;color:var(--st-ink2)}
+.au-tby{position:absolute;right:48px;top:32px;font-size:14px;color:var(--st-ink3)}
+.au-tcap{position:absolute;left:590px;right:60px;top:50%;transform:translateY(-50%)}
+.au-tk{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600}
+.au-tk i{width:9px;height:9px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-tk.au-ctx{color:var(--st-ink2)}.au-tk.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-tt{font-size:46px;line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:14px 0 14px;text-wrap:balance}
+.au-tl{font-size:23px;line-height:1.36;color:var(--st-ink2);letter-spacing:-.01em;margin:0;max-width:28ch}
+.au-to{margin-top:28px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-to small{display:block;font-size:14px;font-weight:600;color:var(--st-ink3)}
+.au-to b{display:inline-block;font-size:62px;font-weight:700;letter-spacing:-.045em;line-height:1.08;color:var(--st-accent);margin-top:4px}
+.au-to span{display:block;font-size:16px;color:var(--st-ink2);margin-top:2px}
+.au-tprog{position:absolute;left:48px;right:48px;bottom:22px;height:4px;border-radius:3px;background:var(--st-hair);overflow:hidden}
+.au-tprog i{display:block;height:100%;background:var(--st-hi)}
+.au-ttap{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.5);box-shadow:0 0 0 2.5px rgba(255,255,255,.9),0 6px 16px rgba(0,0,0,.35);opacity:0}
+.au-tintro,.au-tend{position:absolute;inset:0;background:var(--st-ground);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0}
+.au-tintro .au-lede{margin-top:18px}
+.au-te-h{font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.035em;margin:0;max-width:18ch;text-wrap:balance}
+.au-te-n{display:flex;gap:64px;margin-top:30px}
+.au-te-n small{display:block;font-size:14px;color:var(--st-ink2)}
+.au-te-n b{display:block;font-size:76px;font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-accent);margin:4px 0 6px}
+.au-te-n span{font-size:15px;color:var(--st-ink2)}
+.au-te-q{display:flex;align-items:center;gap:18px;margin-top:34px;background:var(--st-card);border-radius:20px;padding:12px 24px 12px 12px;text-align:left}
+.au-te-q img{width:104px;height:104px;border-radius:10px;image-rendering:pixelated}
+.au-te-q b{display:block;font-size:18px;font-weight:600}
+.au-te-q span{display:block;font-size:15px;color:var(--st-link);margin-top:3px}
+.au-te-f{position:absolute;bottom:44px;left:0;right:0;font-size:13px;color:var(--st-ink3);margin:0}
+
+/* ---------- screen engine (layout only, no colours) ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--b-bg);color:var(--b-ink);font-family:var(--b-font);
+     transform:translateX(100%);transition:transform .32s cubic-bezier(.3,.7,.2,1);overflow:hidden;text-align:left;line-height:normal;font-size:16px}
+.scr.is-active{transform:none;z-index:2}.scr.is-past{transform:translateX(-28%)}.scr.under{transform:none;z-index:1}
+.scr.sheet{transform:translateY(100%)}.scr.sheet.is-active{transform:none}
+.nofx,.nofx *{transition:none!important}
+.shot .scr{transition:none!important}
+/* ?phone — just the device at (10,10), for shoot.sh and hero-stills.sh (&clear = transparent ground) */
+.phoneonly body{background:#141615}
+.phoneonly.clear body{background:transparent}
+.phoneonly body *{visibility:hidden}
+.phoneonly .phone,.phoneonly .phone *{visibility:visible}
+.phoneonly .phone{position:fixed;top:10px;left:10px;z-index:99;box-shadow:none;max-width:none;margin:0}
+
+/* How it would run: stack, test speed, retention, other apps (audit page, Adapty's) */
+.au-runs{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2.4vw,24px);margin-top:clamp(36px,5vw,56px)}
+.au-run{background:var(--st-ground);border-radius:22px;padding:clamp(22px,3vw,32px)}
+.au-run .au-ic{width:36px;height:36px;border-radius:10px;background:var(--st-card);display:grid;place-items:center;margin-bottom:16px}
+.au-run .au-ic svg{width:19px;height:19px;stroke:var(--st-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.au-run h3{font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0 0 8px}
+.au-run p{margin:0;font-size:16px;line-height:1.5;color:var(--st-ink2)}
+.au-run p b{color:var(--st-ink);font-weight:600}
+.au-run .au-big{display:flex;align-items:baseline;gap:12px;margin:18px 0 0}
+.au-run .au-big b{font-size:44px;font-weight:700;letter-spacing:-.04em;line-height:1;background:linear-gradient(transparent 58%,var(--st-mark) 58%)}
+.au-run .au-big span{font-size:14px;line-height:1.35;color:var(--st-ink2)}
+.au-run.au-q{background:var(--st-accent);color:#fff}
+.au-run.au-q h3{color:#fff}.au-run.au-q p{color:rgba(255,255,255,.78)}.au-run.au-q p b{color:var(--st-hi)}
+.au-run.au-q .au-ic{background:rgba(255,255,255,.12)}.au-run.au-q .au-ic svg{stroke:var(--st-hi)}
+.au-run.au-sm{grid-column:1 / -1;display:flex;gap:20px;align-items:center;padding-block:20px}
+.au-run.au-sm .au-ic{margin:0;flex:none}
+@media (max-width:760px){.au-runs{grid-template-columns:1fr}.au-run.au-sm{flex-direction:column;align-items:flex-start}}
+
+/* SCREENS:START — The Guardian's screens. Colours only via var(--b-*) (or black/white alpha). */
+.g-col{flex:1;display:flex;flex-direction:column;min-height:0}
+.g-cta{width:100%;border:0;border-radius:var(--b-pill);background:var(--b-primary);color:var(--b-primary-ink);font:700 18px var(--b-font);padding:13px;cursor:pointer}
+.g-cta:disabled{opacity:.35;cursor:default}
+.g-ycta{width:100%;border:0;border-radius:var(--b-pill);background:var(--b-accent2);color:var(--b-primary);font:700 19px var(--b-font);padding:12px;cursor:pointer}
+.g-octa{width:100%;background:none;border:1.5px solid var(--b-primary);border-radius:var(--b-pill);color:var(--b-primary);font:700 17px var(--b-font);padding:9px;cursor:pointer}
+.g-grab{width:40px;height:5px;border-radius:3px;background:var(--b-line);margin:0 auto}
+.s-x{position:absolute;top:54px;right:16px;width:32px;height:32px;border-radius:50%;border:0;background:var(--b-surface);color:var(--b-ink);font:600 15px var(--b-font);cursor:pointer;z-index:4}
+/* tab bar */
+.g-tabs{display:flex;justify-content:space-around;border-top:1px solid var(--b-line);background:var(--b-surface);padding:7px 4px 24px;flex:none}
+.g-tabs span{display:flex;flex-direction:column;align-items:center;gap:3px;font:500 11.5px var(--b-font);color:var(--b-ink2);width:20%}
+.g-tabs span.on{color:var(--b-primary)}
+.g-tabs svg{width:26px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6}
+.g-tabs span.on svg{fill:currentColor;stroke:none}
+/* welcome (theirs, verbatim) */
+.g-wel{flex:1;display:flex;flex-direction:column;background:var(--b-grad);padding:128px 30px 36px}
+.g-welh{font:700 36px/1.07 var(--b-font);color:var(--b-primary);text-align:center;margin:0 0 42px;letter-spacing:-.01em}
+.g-feat{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:28px}
+.g-feat li{display:flex;gap:15px;align-items:flex-start}
+.g-feat img{width:44px;height:44px;flex:none;border-radius:6px}
+.g-feat b{display:block;font:700 19px/1.2 var(--b-font);color:var(--b-primary)}
+.g-feat i{display:block;font:400 16px/1.3 var(--b-font);font-style:normal;color:var(--b-ink);margin-top:2px}
+.g-wel .g-cta{margin-top:auto}
+/* consent (theirs, verbatim) */
+.g-con{flex:1;display:flex;flex-direction:column;background:var(--b-primary);color:var(--b-primary-ink);padding:60px 0 28px;min-height:0}
+.g-conh{font:700 30px var(--b-font);margin:0 26px 10px;padding-top:12px;border-top:1px solid var(--b-navline)}
+.g-conb{flex:1;min-height:0;overflow:hidden;padding:0 26px;font:400 15.5px/1.42 var(--b-font);-webkit-mask-image:linear-gradient(rgba(0,0,0,1) 82%,transparent);mask-image:linear-gradient(rgba(0,0,0,1) 82%,transparent)}
+.g-conb p{margin:0 0 14px}.g-conb u{text-underline-offset:3px}
+.g-conbtn{display:flex;flex-direction:column;gap:10px;padding:12px 18px 0;border-top:1px solid var(--b-navline)}
+.g-lt{border:0;border-radius:var(--b-pill);background:var(--b-primary-ink);color:var(--b-primary);font:700 17px var(--b-font);padding:9px;cursor:pointer}
+.g-mg{border:0;border-radius:var(--b-pill);background:var(--b-navline);color:var(--b-primary-ink);font:700 17px var(--b-font);padding:9px;cursor:pointer}
+/* navy bar used by My Guardian */
+.g-bar{background:var(--b-primary);color:var(--b-primary-ink);padding:58px 18px 13px;text-align:center;flex:none}
+.g-bar h2{margin:0;font:700 21px var(--b-font)}
+/* topic picker (new, built from My Guardian's own category list) */
+.g-tq{padding:16px 18px 6px;flex:none}
+.g-tq h1{margin:0;font:700 25px/1.12 var(--b-font);color:var(--b-ink)}
+.g-tq p{margin:6px 0 0;font:400 15px/1.35 var(--b-font);color:var(--b-ink2)}
+.g-tl{flex:1;min-height:0;padding:0 18px}
+.g-top{display:flex;align-items:center;width:100%;height:58px;background:none;border:0;border-top:1px solid var(--b-line);padding:0 2px;cursor:pointer;text-align:left;gap:10px}
+.g-top:last-child{border-bottom:1px solid var(--b-line)}
+.g-top b{flex:1;font:700 20px/1.05 var(--b-font)}
+.g-top img{height:46px;width:auto;flex:none;align-self:flex-end}
+.g-tick{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--b-line);flex:none;display:grid;place-items:center;color:var(--b-primary-ink);font:700 14px var(--b-font)}
+.g-top.on .g-tick{background:var(--b-primary);border-color:var(--b-primary)}
+.g-top.on .g-tick::after{content:"✓"}
+.g-foot{padding:10px 18px 30px;flex:none}
+.t-culture{color:var(--b-tan)}.t-opinion{color:var(--b-orange)}.t-lifestyle{color:var(--b-pink)}.t-environment{color:var(--b-green)}
+.t-sport{color:var(--b-blue)}.t-science{color:var(--b-dred)}.t-news{color:var(--b-red)}
+/* why support (new, in their navy + yellow editorial style) */
+.g-why{flex:1;display:flex;flex-direction:column;background:var(--b-primary);color:var(--b-primary-ink);padding:60px 22px 26px}
+.g-mast{position:relative;flex:none}
+.g-mast img{width:100%;display:block;border-radius:6px}
+.g-mast em{position:absolute;top:8px;right:14px;font:600 13px var(--b-font);font-style:normal;color:var(--b-primary-ink)}
+.g-why h1{margin:20px 0 10px;font:700 29px/1.08 var(--b-font);color:var(--b-accent2)}
+.g-why .g-lead{margin:0;font:400 17px/1.35 var(--b-font)}
+.g-stats{display:flex;gap:18px;margin:18px 0 0;padding:14px 0;border-top:1px solid var(--b-navline);border-bottom:1px solid var(--b-navline)}
+.g-stats div{flex:1}
+.g-stats b{display:block;font:700 30px/1 var(--b-font);color:var(--b-accent2)}
+.g-stats span{display:block;font:400 13.5px/1.3 var(--b-font);margin-top:5px}
+.g-star{margin:12px 0 0;font:600 14.5px var(--b-font)}
+.g-star i{font-style:normal;color:var(--b-accent2);letter-spacing:1px}
+.g-gets{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.g-gets li{display:flex;gap:10px;font:400 15.5px/1.3 var(--b-font)}
+.g-gets li::before{content:"✓";color:var(--b-accent2);font-weight:700;flex:none}
+.g-why .g-ycta{margin-top:auto}
+.g-free{background:none;border:0;color:var(--b-primary-ink);font:600 16px var(--b-font);text-decoration:underline;text-underline-offset:3px;margin:12px auto 0;cursor:pointer;display:block}
+.g-fine{margin:6px 0 0;text-align:center;font:400 12.5px var(--b-font);opacity:.7}
+/* paywall (theirs, re-ordered) */
+.g-pw{flex:1;display:flex;flex-direction:column;padding:58px 18px 26px;min-height:0}
+.g-pw .g-grab{margin-bottom:10px}
+.g-pwh{margin:10px 40px 10px 0;font:500 32px/1.06 var(--b-font);color:var(--b-blue)}
+.g-pws{margin:0;font:400 16.5px/1.36 var(--b-font);color:var(--b-ink)}
+.g-pws b{font-weight:700}
+.g-unl{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.g-unl li{display:flex;gap:9px;font:500 15.5px/1.3 var(--b-font);color:var(--b-ink)}
+.g-unl li::before{content:"✓";color:var(--b-blue);font-weight:800;flex:none}
+.g-plans{display:flex;gap:10px;margin-top:18px}
+.g-plan{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--b-bg);border:2px solid var(--b-grey);border-radius:12px;padding:12px 8px 14px;cursor:pointer;font-family:var(--b-font);color:var(--b-ink2);min-height:190px}
+.g-plan.on{border:3px solid var(--b-blue);background:var(--b-card)}
+.g-plan .g-lab{font:700 16px var(--b-font);color:var(--b-ink2);margin-top:6px}
+.g-plan .g-pr{font:800 30px/1.1 var(--b-font);color:var(--b-ink2);margin-top:2px;white-space:nowrap}
+.g-plan.on .g-pr{color:var(--b-blue)}
+.g-plan .g-pm{font:700 15px var(--b-font);color:var(--b-ink);margin-top:4px;white-space:nowrap}
+.g-plan .g-tn{font:400 13px/1.3 var(--b-font);color:var(--b-blue);margin-top:6px}
+.g-plan .g-ca{font:400 15px var(--b-font);color:var(--b-ink2);margin-top:6px}
+.g-badge{background:var(--b-accent2);color:var(--b-ink);font:700 14px var(--b-font);padding:3px 8px;white-space:nowrap}
+.g-sp{height:24px}
+.g-intro{margin:10px 0 0;text-align:center;font:400 13.5px/1.35 var(--b-font);color:var(--b-ink)}
+.g-proof{display:flex;align-items:center;justify-content:center;gap:6px;margin:auto 0 10px;padding-top:14px;font:600 14px var(--b-font);color:var(--b-ink)}
+.g-proof i{font-style:normal;color:var(--b-primary);letter-spacing:1px}
+.g-pw .g-octa{margin-top:10px}
+.g-links{display:flex;justify-content:center;gap:18px;margin-top:14px;font:400 13px var(--b-font);color:var(--b-ink2)}
+/* offer on close (sheet) */
+.g-dim{background:rgba(0,0,0,.42)}
+.g-sh{margin-top:auto;background:var(--b-bg);border-radius:18px 18px 0 0;padding:10px 20px 30px;position:relative}
+.g-sh .s-x{top:16px}
+.g-ok{margin:18px 0 0;font:700 14px var(--b-font);color:var(--b-primary);letter-spacing:.02em}
+.g-sh h1{margin:4px 30px 8px 0;font:700 28px/1.1 var(--b-font);color:var(--b-primary)}
+.g-sh p{margin:0;font:400 16px/1.38 var(--b-font);color:var(--b-ink)}
+.g-six{margin:16px 0;border:3px solid var(--b-blue);background:var(--b-card);border-radius:12px;padding:14px 16px;text-align:center}
+.g-six .g-lab{font:700 16px var(--b-font);color:var(--b-ink2)}
+.g-six .g-pr{font:800 36px/1.1 var(--b-font);color:var(--b-blue)}
+.g-six .g-pm{font:700 15px var(--b-font);color:var(--b-ink);margin-top:2px}
+.g-six .g-tn{font:400 13px var(--b-font);color:var(--b-blue);margin-top:6px}
+.g-sh .g-free{color:var(--b-primary)}
+/* supporter check + welcome back (new, in their navy + yellow style) */
+.g-yes{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.g-yes .g-free{margin-top:4px;font-size:14.5px;opacity:.85}
+.g-ghost{width:100%;background:none;border:1.5px solid var(--b-primary-ink);border-radius:var(--b-pill);color:var(--b-primary-ink);font:700 17px var(--b-font);padding:10px;cursor:pointer}
+.g-oky{color:var(--b-accent2);margin:22px 0 0}
+.g-oky + h1{margin-top:6px}
+/* their web sign-in and account pages (profile.theguardian.com), word for word */
+.g-web{background:var(--b-bg)}
+.g-wbar{display:flex;align-items:center;justify-content:space-between;padding:56px 16px 11px;background:var(--b-surface);border-bottom:1px solid var(--b-line);flex:none;font:400 15px var(--b-font);color:var(--b-blue)}
+.g-wbar b{font:600 15px var(--b-font);color:var(--b-ink)}
+.g-wbar span{width:48px}
+.g-wlogo{display:flex;justify-content:flex-end;padding:10px 18px 8px;border-bottom:1px solid var(--b-ink2);flex:none}
+.g-wlogo span{font:700 19px/.86 var(--b-font);color:var(--b-primary);letter-spacing:-.02em;text-align:left}
+.g-wbody{flex:1;min-height:0;padding:12px 18px 20px;display:flex;flex-direction:column}
+.g-wbody h1{margin:0 0 6px;font:700 30px/1.08 var(--b-font);color:var(--b-primary)}
+.g-wbody > p{margin:0 0 10px;font:400 15px/1.35 var(--b-font);color:var(--b-ink)}
+.g-wbody u{color:var(--b-blue);text-underline-offset:3px;font-weight:600}
+.g-wnote{background:var(--b-surface);padding:9px 11px;border-radius:4px;font-size:13px!important}
+.g-wbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--b-bg);border:1.5px solid var(--b-primary);border-radius:var(--b-pill);color:var(--b-primary);font:700 16px var(--b-font);padding:9px;margin-top:8px;cursor:pointer}
+.g-wbtn svg{width:20px;height:20px;flex:none;fill:var(--b-ink)}
+.g-wor{display:flex;align-items:center;gap:10px;margin:12px 0 4px!important;color:var(--b-ink2)!important;font-size:14px!important}
+.g-wor::before,.g-wor::after{content:"";flex:1;height:1px;background:var(--b-line)}
+.g-wlab{font:700 16px var(--b-font);color:var(--b-primary);margin-top:2px}
+.g-win{height:40px;border:1.5px solid var(--b-ink2);border-radius:4px;margin:5px 0 12px;flex:none}
+.g-wlnk{margin:10px 0 0!important}
+.g-wfoot{margin-top:auto!important;padding-top:10px;border-top:1px solid var(--b-line)}
+.g-tog{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px;font:400 13px/1.3 var(--b-font);color:var(--b-ink2)}
+.g-tog b{display:block;font:700 14.5px var(--b-font);color:var(--b-ink);margin-bottom:2px}
+.g-tog i{flex:none;width:44px;height:26px;border-radius:13px;background:var(--b-primary);position:relative;margin-top:2px}
+.g-tog i::after{content:"";position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--b-bg)}
+/* edition picker (theirs lives in Settings; moved into onboarding) */
+.g-ed{height:62px}
+.g-ed b{color:var(--b-primary)}
+/* mission screen, tied to the topic picked first */
+.g-mis h1{margin:8px 0 12px;font-size:27px}
+.g-mk{margin:18px 0 0;font:700 14px var(--b-font);letter-spacing:.04em;text-transform:uppercase;color:var(--b-accent2)}
+.g-story{display:flex;gap:11px;align-items:center;background:var(--b-bg);border-radius:8px;padding:8px;margin:0 0 12px}
+.g-story img{width:88px;height:64px;object-fit:cover;border-radius:5px;flex:none;background:var(--b-surface)}
+.g-story img.g-il{object-fit:contain}
+.g-story small{display:block;font:600 12.5px var(--b-font);margin-bottom:2px}
+.g-story h3{margin:0;font:700 15px/1.18 var(--b-font);color:var(--b-ink)}
+.g-mis .g-lead{font-size:16px}
+.g-mis .g-stats{margin-top:14px;padding:11px 0}
+.g-mis .g-stats b{font-size:25px}
+.g-mreg{margin:10px 0 14px;text-align:left;font-size:13.5px}
+/* paywall TODAY (aside, rebuilt word for word) */
+.g-td{flex:1;display:flex;flex-direction:column;padding:58px 14px 0;min-height:0}
+.g-tdh{margin:2px 0 8px;font:500 33px/1.05 var(--b-font);color:var(--b-blue)}
+.g-tdp{margin:0;font:400 15px/1.17 var(--b-font);color:var(--b-ink);letter-spacing:-.01em}
+.g-tdp b{font-weight:700}
+.g-td .g-plans{margin-top:12px}
+.g-td .g-plan{min-height:150px;justify-content:center;padding:8px 6px 10px}
+.g-td .g-intro{margin:6px 0 10px;font-size:12.5px}
+.g-td .g-ycta{font-size:17px;padding:9px}.g-td .g-octa{font-size:16px;padding:7px}
+.g-td .g-octa{margin-top:10px}
+.g-rows{margin-top:12px}
+.g-rows div{border-top:1px solid var(--b-ink);padding:7px 0;font:400 15px var(--b-font);color:var(--b-ink)}
+.g-td .g-tabs{margin:auto -14px 0}
+/* SCREENS:END */
+</style>
+</head>
+<body>
+
+<nav class="au-nav" aria-label="Sections">
+  <div class="au-nav-in">
+    <div class="au-brand">
+      <img src="assets/brand/appstore-icon.jpg" alt="">
+      <span>Growth Audit <small>· The Guardian</small></span>
+    </div>
+    <a class="au-opt" href="#why">Why this</a>
+    <a href="#ideas">Five ideas</a>
+    <a href="#prototype">Prototype</a>
+    <a class="au-opt" href="#compare" id="navCompare" hidden>Paywall</a>
+    <a class="au-opt" href="#run">How it runs</a>
+  </div>
+</nav>
+
+<header class="au-top-hero" id="top">
+  <div class="au-wrap">
+    <p class="au-eyebrow"><i></i>Growth Audit · October 2026</p>
+    <h1 class="au-display">The Guardian</h1>
+    <p class="au-lede">Five ideas to turn more Guardian readers into supporters, and to spot the ones who already are. <span>Each one built into your own onboarding, so you can tap through it.</span></p>
+    <p class="au-byline">Prepared by Adapty for the Guardian team</p>
+    <div class="au-ctas">
+      <a class="au-btn" href="#ideas">See the five ideas</a>
+      <a class="au-lnk" href="#prototype">Open the prototype</a>
+      <button type="button" class="au-lnk au-play" id="heroVideo" hidden>Watch the 30-second walkthrough</button>
+    </div>
+  </div>
+  <!-- filled from CONTENT.hero: three screen ids → assets/hero/<id>.png (make them with hero-stills.sh) -->
+  <div class="au-phones" id="heroPhones" aria-label="Three screens from the prototype"></div>
+</header>
+
+<section class="au-sec au-white" id="why">
+  <div class="au-wrap">
+    <div class="au-split">
+      <div>
+        <p class="au-kicker">Why you’re seeing this</p>
+        <h2 class="au-h2">30,000 subscription apps taught us what moves conversion. <span>Here’s what we’d test first at The Guardian.</span></h2>
+      </div>
+      <div>
+        <p>Adapty runs subscriptions for <b>more than 30,000 apps</b>, so we see which onboarding and paywall changes lift revenue across the whole market, not just inside one app.</p>
+        <p>We pointed that at The Guardian. We took <b>your own screens, copy and prices</b> from your live iOS app and App Store listing, and rebuilt the path from install to paywall around the five ideas with the most potential.</p>
+      </div>
+    </div>
+    <div class="au-stats">
+      <div class="au-stat"><b>30,000+</b><span>apps run their subscriptions on Adapty</span></div>
+      <div class="au-stat"><b>5</b><span>ideas, each built as a working screen</span></div>
+      <div class="au-stat"><b>0</b><span>changes to your art direction</span></div>
+    </div>
+    <div class="au-notes">
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></div>
+        <h3>Five ideas, not fifteen</h3>
+        <p>We’re not proposing to rebuild every screen. These are the changes with the highest potential, ranked by what we’d test first.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/></svg></div>
+        <h3>Your design, not ours</h3>
+        <p>Every colour, control and price in the prototype is The Guardian’s. We changed the order and what gets shown.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4H15"/></svg></div>
+        <h3>We hope you haven’t tried these yet</h3>
+        <p>We work from the outside, so we can’t see your test history. If you’ve already run one of these, tell us and we’ll go deeper on the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec" id="ideas">
+  <div class="au-wrap">
+    <div class="au-ideas-h">
+      <p class="au-kicker">The shortlist</p>
+      <h2 class="au-h2">Five ideas. <span>Ranked by what we’d test first.</span></h2>
+    </div>
+    <div class="au-list" id="ideaList"></div>
+    <div class="au-band">
+      <div>
+        <p class="au-k">Potential outcome, based on Adapty data</p>
+        <h3>Together they work on three moments: who you ask, what you tell them before the price, and what happens when they say “not yet”.</h3>
+        <p class="au-fn" id="bandFn"></p>
+        <a class="au-btn" href="#prototype">Tap through the prototype</a>
+      </div>
+      <div class="au-nums" id="bandNums"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec au-white" id="prototype">
+  <div class="au-wrap">
+    <div class="au-proto-h">
+      <p class="au-kicker">The prototype</p>
+      <h2 class="au-h2">Every idea, inside your own onboarding.</h2>
+      <p>Your screens first, then the branches: supporters go to sign-in, everyone else gets the story behind their topic, their edition’s paywall, and a second chance if they close it. Yellow numbers mark the screens that carry an idea.</p>
+    </div>
+    <div class="au-langrow" id="langRow" hidden><span>Edition</span><div class="au-lsw" id="langSw" role="group" aria-label="Edition: copy and App Store prices"></div></div>
+    <div class="au-seg" id="chips" role="tablist" aria-label="Screens"></div>
+    <div class="au-stage">
+      <div class="phone"><div class="phone-in">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+
+<!-- SCREENS:START — one section.scr[data-id=ID] per screen, in flow order. Only the screens an idea lands on,
+     plus the context needed to read the flow (~8–10). Wiring: data-go="<id>" · data-back · data-pick="key:value"
+     (+ data-advance="<id>") · data-toggle="key:value" · data-bind="key" / "label:key" / "count:key" ·
+     data-requires="key" · data-show="key:value" · data-input="key" · class="scr sheet" slides up (offer paywall).
+     RULE: images only from assets/ (their app, their site, App Store) — never stock, never hotlinked.
+     Extras: data-t="key" = translatable (markup is CONTENT.langs[0]; other languages in CONTENT.i18n) — keep data-t on
+     leaf-ish elements, never on an element that also carries data-bind/data-pick/data-show;
+     data-langtoggle cycles the language (their own language pill); data-aside keeps a screen out of the flow
+     (the paywall TODAY, rendered only for the side-by-side still). -->
+
+<section class="scr" data-id="welcome">
+ <div class="g-wel s-pad">
+  <h1 class="gh g-welh">Welcome to the Guardian app</h1>
+  <ul class="g-feat">
+   <li><img src="assets/crop/ic-home.png" alt=""><div><b>A rich homepage</b><i>Go beyond the headlines with News, Opinion, Sport, Lifestyle and more</i></div></li>
+   <li><img src="assets/crop/ic-myg.png" alt=""><div><b>My Guardian</b><i>Follow your favourite topics to keep up with what matters most to you</i></div></li>
+   <li><img src="assets/crop/ic-listen.png" alt=""><div><b>Listen on the go</b><i>Discover our new Podcasts tab and listen to articles</i></div></li>
+   <li><img src="assets/crop/ic-puzzles.png" alt=""><div><b>Daily puzzles</b><i>New games for all skill levels</i></div></li>
+  </ul>
+  <button class="g-cta" data-go="consent">Continue</button>
+ </div>
+</section>
+
+<section class="scr" data-id="consent">
+ <div class="g-con">
+  <h1 class="gh g-conh">It's your choice</h1>
+  <div class="g-conb">
+   <p>When we make the Guardian available to you online, we use app technologies to help us to do this. Some are necessary to help our app work properly and can't be switched off, and some are optional but support the Guardian and your experience in other ways.</p>
+   <p>For instance, we and our 161 <u>partners</u> may use app technologies to access personal data, including browsing data and unique identifiers. We use this information about you, your devices and your use of this app to provide, analyse and improve our services. This may include personalising content or advertising for you based on your use of this app.</p>
+   <p>Your data is not linked with data collected by other companies' apps, websites, or offline properties for the purposes of targeted advertising or advertising measurement.</p>
+   <p><b>We use app technologies for the following purposes:</b></p>
+   <p>⌄&nbsp; Store and/or access information on a device</p>
+  </div>
+  <div class="g-conbtn">
+   <button class="g-lt" data-go="supporter">Yes, I accept</button>
+   <button class="g-lt" data-go="supporter">No, thank you</button>
+   <button class="g-mg" data-go="supporter">Manage my choice</button>
+  </div>
+ </div>
+</section>
+
+<section class="scr" data-id="supporter">
+ <div class="g-why s-pad">
+  <div class="g-mast"><img src="assets/crop/masthead.png" alt="The Guardian"></div>
+  <h1 class="gh">Already a Guardian supporter?</h1>
+  <p class="gh g-lead">Lots of readers support us on theguardian.com. Sign in with the same account and the app unlocks straight away. No second payment.</p>
+  <ul class="g-gets">
+   <li>Ad-free, unlimited reading in the app</li>
+   <li>Offline reading on the go</li>
+   <li>Your topics and saved articles on every device</li>
+  </ul>
+  <div class="g-yes">
+   <button class="g-ycta" data-pick="supporter:yes" data-advance="signin">Yes, I support the Guardian</button>
+   <button class="g-ghost" data-pick="supporter:no" data-advance="topics">Not yet, show me around</button>
+   <button class="g-free">I subscribed through the App Store · Restore</button>
+  </div>
+ </div>
+</section>
+
+<section class="scr" data-id="signin">
+ <div class="g-col g-web">
+  <div class="g-wbar"><span>Cancel</span><b>profile.theguardian.com</b><span></span></div>
+  <div class="g-wlogo"><span class="gh">The<br>Guardian</span></div>
+  <div class="g-wbody">
+   <h1 class="gh">Sign in</h1>
+   <p>One account to access all Guardian products.</p>
+   <p class="g-wnote">By proceeding, you agree to our <u>terms and conditions</u>. For information about how we use your data, see our <u>privacy policy</u>.</p>
+   <button class="g-wbtn" data-go="back"><svg viewBox="0 0 24 24"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z" style="fill:var(--b-g1)"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z" style="fill:var(--b-g2)"/><path d="M6.4 14a6 6 0 0 1 0-3.9V7.5H3.1a10 10 0 0 0 0 9z" style="fill:var(--b-g3)"/><path d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.8 9.4 6 12 6z" style="fill:var(--b-g4)"/></svg>Continue with Google</button>
+   <button class="g-wbtn" data-go="back"><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.2.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6 0 0-2.5-1-2.5-3.6zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg>Continue with Apple</button>
+   <p class="g-wor"><span>or continue with</span></p>
+   <label class="g-wlab">Email</label>
+   <div class="g-win"></div>
+   <button class="g-cta" data-go="back">Sign in with email</button>
+   <p class="g-wlnk"><u>Sign in with a password instead</u></p>
+   <p class="g-wfoot">Not signed in before? <u>Create a free account</u></p>
+  </div>
+ </div>
+</section>
+
+<section class="scr" data-id="back">
+ <div class="g-why s-pad">
+  <div class="g-mast"><img src="assets/crop/masthead.png" alt="The Guardian"></div>
+  <p class="g-ok g-oky">SUPPORTER · SIGNED IN</p>
+  <h1 class="gh">Welcome back. Thank you for supporting the Guardian.</h1>
+  <p class="gh g-lead">We found your support on theguardian.com, so everything is already on in the app.</p>
+  <ul class="g-gets">
+   <li>Unlimited reading in the app, with no subscription messages</li>
+   <li>Ad-free reading, for an uninterrupted experience</li>
+   <li>Offline reading – download articles to explore on the go</li>
+  </ul>
+  <button class="g-ycta">Start reading</button>
+  <p class="g-fine">No paywall, no second payment.</p>
+ </div>
+</section>
+
+<section class="scr" data-id="topics">
+ <div class="g-col">
+  <div class="g-bar"><h2 class="gh">My Guardian</h2></div>
+  <div class="g-tq">
+   <h1 class="gh">What do you want to follow?</h1>
+   <p>Pick as many as you like. We'll build My Guardian from them.</p>
+  </div>
+  <div class="g-tl">
+  <button class="g-top" data-toggle="topics:news"><b class="gh t-news">News, politics &amp; business</b><img src="assets/crop/illo-news.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:opinion"><b class="gh t-opinion">Opinion</b><img src="assets/crop/illo-opinion.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:sport"><b class="gh t-sport">Sport</b><img src="assets/crop/illo-sport.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:culture"><b class="gh t-culture">Culture</b><img src="assets/crop/illo-culture.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:lifestyle"><b class="gh t-lifestyle">Lifestyle</b><img src="assets/crop/illo-lifestyle.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:environment"><b class="gh t-environment">Environment</b><img src="assets/crop/illo-environment.png" alt=""><span class="g-tick"></span></button>
+  <button class="g-top" data-toggle="topics:science"><b class="gh t-science">Science &amp; technology</b><img src="assets/crop/illo-science.png" alt=""><span class="g-tick"></span></button>
+  </div>
+  <div class="g-foot"><button class="g-cta" data-go="edition" data-requires="topics">Continue · <span data-bind="count:topics"></span> <span class="g-tw">topics</span></button></div>
+ </div>
+</section>
+
+<section class="scr" data-id="edition">
+ <div class="g-col">
+  <div class="g-bar"><h2 class="gh">Edition</h2></div>
+  <div class="g-tq">
+   <h1 class="gh">Which edition do you read?</h1>
+   <p><span data-t="ed_sub">We picked US from your phone’s region.</span> Each edition has its own homepage.</p>
+  </div>
+  <div class="g-tl">
+   <button class="g-top g-ed" data-pick="edition:us"><b class="gh">US edition</b><span class="g-tick"></span></button>
+   <button class="g-top g-ed" data-pick="edition:gb"><b class="gh">UK edition</b><span class="g-tick"></span></button>
+   <button class="g-top g-ed" data-pick="edition:au"><b class="gh">Australia edition</b><span class="g-tick"></span></button>
+   <button class="g-top g-ed" data-pick="edition:eu"><b class="gh">Europe edition</b><span class="g-tick"></span></button>
+  </div>
+  <div class="g-foot"><button class="g-cta" data-go="mission">Continue</button></div>
+ </div>
+</section>
+
+<section class="scr" data-id="mission">
+ <div class="g-why g-mis s-pad">
+  <div class="g-mast"><img src="assets/crop/masthead.png" alt="The Guardian"><em><span data-t="region">US</span> ⌄</em></div>
+  <p class="g-mk" data-mk></p>
+  <h1 class="gh" data-mh></h1>
+  <article class="g-story"><img data-mimg src="assets/crop/illo-environment.png" alt=""><div><small data-mtag></small><h3 class="gh" data-mst></h3></div></article>
+  <p class="gh g-lead" data-mp></p>
+  <div class="g-stats">
+   <div><b class="gh">1 million+</b><span>recurring digital supporters</span></div>
+   <div><b class="gh">180+</b><span>countries they read from</span></div>
+  </div>
+  <p class="g-fine g-mreg" data-t="mis_reg">Join readers across America who keep it free for everyone.</p>
+  <button class="g-ycta" data-go="paywall">See ways to support</button>
+  <button class="g-free" data-go="register">Keep reading for free</button>
+ </div>
+</section>
+
+<section class="scr" data-id="paywall">
+ <button class="s-x" data-go="offer" aria-label="Close">✕</button>
+ <div class="g-pw">
+  <div class="g-grab"></div>
+  <h1 class="gh g-pwh">Support the journalism you follow</h1>
+  <p class="gh g-pws">You follow <b data-bind="topiclist">Environment and Sport</b>. <span data-t="pw_reg">Independent news for America, funded by readers, not a billionaire owner.</span></p>
+  <ul class="g-unl">
+   <li>Unlimited reading, with no subscription messages</li>
+   <li>Ad-free reading, for an uninterrupted experience</li>
+   <li>Offline reading, to explore on the go</li>
+  </ul>
+  <div class="g-plans">
+   <button class="g-plan" data-pick="plan:year"><span class="g-badge" data-t="pw_badge">Save 39% in year one</span><span class="g-lab">Annual</span><span class="g-pr" data-t="pw_yr">$108.99</span><span class="g-pm" data-t="pw_yrmo">$9.08/month</span><span class="g-tn" data-t="pw_then">Then $144.99/year after 1 year. Cancel anytime.</span></button>
+   <button class="g-plan" data-pick="plan:month"><span class="g-sp"></span><span class="g-lab">Monthly</span><span class="g-pr" data-t="pw_mo">$14.99</span><span class="g-ca">Cancel anytime</span></button>
+  </div>
+  <p class="g-intro" data-t="pw_intro">Annual introductory offer for new supporters only.</p>
+  <p class="g-proof"><i>★★★★★</i> <span data-t="proof">4.9 · 113K ratings</span> · 1 million+ supporters</p>
+  <button class="g-ycta">Support us now</button>
+  <button class="g-octa" data-go="signin">I already support the Guardian</button>
+  <div class="g-links"><span>Terms and conditions</span><span>FAQs</span><span>Privacy policy</span></div>
+ </div>
+</section>
+
+<section class="scr sheet g-dim" data-id="offer">
+ <div class="g-sh">
+  <div class="g-grab"></div>
+  <button class="s-x" data-go="register" aria-label="Close">✕</button>
+  <p class="g-ok">BEFORE YOU GO</p>
+  <h1 class="gh">Not ready for a year? Support us for six months.</h1>
+  <p class="gh">The same full access: unlimited reading, no ads, offline articles.</p>
+  <div class="g-six">
+   <div class="g-lab">6 months</div>
+   <div class="g-pr" data-t="of_price">$36.99</div>
+   <div class="g-pm" data-t="of_mo">$6.17/month · 59% less than monthly</div>
+   <div class="g-tn" data-t="of_renew">Renews every 6 months at $36.99. Cancel anytime.</div>
+  </div>
+  <button class="g-ycta">Support for 6 months</button>
+  <button class="g-free" data-go="register">Keep reading for free</button>
+ </div>
+</section>
+
+<section class="scr" data-id="register">
+ <div class="g-col g-web">
+  <div class="g-bar"><h2 class="gh">My Guardian</h2></div>
+  <div class="g-wbody">
+   <h1 class="gh">Keep <span data-bind="topiclist">Environment and Sport</span> on every device</h1>
+   <p>A free account saves what you follow and read, on your phone and on theguardian.com.</p>
+   <button class="g-wbtn"><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.2.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.2.9-1.3 1.3-2.5 1.3-2.6 0 0-2.5-1-2.5-3.6zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg>Continue with Apple</button>
+   <p class="g-wor"><span>or continue with</span></p>
+   <label class="g-wlab">Email</label>
+   <div class="g-win"></div>
+   <div class="g-tog"><div><b>Saturday Edition newsletter</b><span>An exclusive email highlighting the week's best Guardian journalism from the editor-in-chief, Katharine Viner.</span></div><i></i></div>
+   <button class="g-cta">Create a free account</button>
+   <p class="g-wfoot">Maybe later. <u>Start reading</u></p>
+  </div>
+ </div>
+</section>
+
+<section class="scr" data-id="today" data-aside>
+ <div class="g-td">
+  <div class="g-grab"></div>
+  <h1 class="gh g-tdh">Support the Guardian</h1>
+  <p class="gh g-tdp">Fund fiercely independent journalism today, and we’ll unlock full access to our quality news app for you. <b>Read with no ads or interruptions on the go.</b> Enjoy a beautiful, intuitive experience here, from breaking news updates to diverse opinion pieces and eclectic podcasts. And, there’s the added benefit of knowing you’re empowering Guardian journalists around the world, so they can continue to report with courage and rigour on the events shaping our world.</p>
+  <div class="g-plans">
+   <div class="g-plan"><span class="g-lab">Monthly</span><span class="g-pr">$14.99</span><span class="g-ca">Cancel anytime</span></div>
+   <div class="g-plan on"><span class="g-badge">Save on annual</span><span class="g-lab">Annual</span><span class="g-pr">$108.99</span><span class="g-ca">Equivalent to $9.08/ month</span><span class="g-tn">Then $144.99/year after 1 year. Cancel anytime.</span></div>
+  </div>
+  <p class="g-intro">Annual introductory offer for new supporters only. Limited time offer.</p>
+  <button class="g-ycta">Support us now</button>
+  <button class="g-octa">I already support the Guardian</button>
+  <div class="g-rows"><div>Terms and conditions</div><div>Frequently asked questions</div><div>Privacy policy</div></div>
+<nav class="g-tabs">
+ <span><svg viewBox="0 0 26 24"><rect x="3" y="3" width="20" height="9" rx="2.5"/><rect x="3" y="14" width="9" height="7" rx="2.5"/><rect x="14" y="14" width="9" height="7" rx="2.5"/></svg>Home</span>
+ <span><svg viewBox="0 0 26 24"><path d="M7 2.5h12v19l-6-4.5-6 4.5z"/></svg>My Guardian</span>
+ <span><svg viewBox="0 0 26 24"><path d="M5 15v-3a8 8 0 0 1 16 0v3"/><rect x="4" y="14" width="4" height="7" rx="2"/><rect x="18" y="14" width="4" height="7" rx="2"/></svg>Podcasts</span>
+ <span><svg viewBox="0 0 26 24"><rect x="4" y="2.5" width="18" height="19" rx="1.5"/><path d="M13 2.5v19M4 12h18"/></svg>Puzzles</span>
+ <span class="on"><svg viewBox="0 0 26 24"><path d="M4 6h18M4 12h18M4 18h18" stroke-width="2.6"/></svg>Menu</span>
+</nav>
+ </div>
+</section>
+<!-- SCREENS:END -->
+
+      </div></div>
+      <div class="au-pn" id="panel" aria-live="polite"></div>
+    </div>
+    <p class="au-hint">Tap “Yes, I support the Guardian” for the supporter branch. Close the paywall with ✕ to see idea 5.</p>
+    <!-- shown when CONTENT.liveUrl is set: assets/qr-app.png = qr.swift "<liveUrl>?app" -->
+    <div class="au-qr" id="qrCard" hidden><img src="assets/qr-app.png" alt="QR code that opens the prototype full screen"><div><b>Try it on your phone</b><p>Scan to open the prototype full screen, the way a new user would see it.</p></div></div>
+    <div class="au-mobw" id="qrMob" hidden><a class="au-btn" href="?app">Open it full screen</a></div>
+  </div>
+</section>
+
+<!-- the paywall TODAY vs PROPOSED — built from CONTENT.compare (stills: assets/hero/<today>.png, <proposed>.png) -->
+<section class="au-sec" id="compare" hidden><div class="au-wrap" id="cmpBody"></div></section>
+
+<section class="au-sec au-white" id="run">
+  <div class="au-wrap">
+    <div class="au-ideas-h">
+      <p class="au-kicker">How it would run</p>
+      <h2 class="au-h2">Next to your stack, not instead of it. <span>And past the paywall too.</span></h2>
+    </div>
+    <div class="au-runs">
+      <article class="au-run au-q">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></svg></div>
+        <h3>One question for you: how fast can the app test?</h3>
+        <p>Today every paywall or offer change in the app ships with an app release. <b>How many variants did you get live in the app last quarter, and how many on the web?</b> In Flow Builder, every screen on this page goes live and into an A/B test without a release.</p>
+      </article>
+      <article class="au-run">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M4 7h10M4 12h16M4 17h10"/><circle cx="18" cy="7" r="2"/><circle cx="18" cy="17" r="2"/></svg></div>
+        <h3>It plugs into your stack</h3>
+        <p>Adapty sends subscription events into <b>mParticle</b> and <b>Braze</b>, and runs alongside <b>Adjust</b>. It doesn’t replace anything: your CDP, your CRM and your attribution stay as they are, and the app’s paywalls get the speed your web and email already have.</p>
+      </article>
+      <article class="au-run">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/></svg></div>
+        <h3>After the paywall: cancel flows and win-back</h3>
+        <p>The same builder runs the moment a supporter cancels (pause, the six-month plan, a reason to stay) and the win-back offer for lapsed supporters.</p>
+        <div class="au-big"><b>56%</b><span>of subscribers who came back on a win-back offer are still paying three months later</span></div>
+      </article>
+      <article class="au-run">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+        <h3>Benchmarks across categories</h3>
+        <p>Adapty’s State of Paywalls has no news category, so the numbers on this page are cross-category: <b>$170 vs $40</b> per 1,000 views for onboarding vs later paywalls, <b>40%</b> of buyers needing more than one view, <b>4%</b> of apps with a second paywall, <b>2%</b> with a personalised headline.</p>
+      </article>
+      <article class="au-run au-sm">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg></div>
+        <p><b>Later: Feast and Guardian Puzzles.</b> Both could run on the same platform and SDK once the news app is live. A future option, not part of this test.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="au-foot" id="sources">
+  <div class="au-wrap">
+    <details id="srcDetails">
+      <summary>Where the numbers come from</summary>
+      <div class="au-srcs" id="srcBody"></div>
+    </details>
+    <p class="au-fine" id="fine"></p>
+    <div class="au-cta-line">
+      <p>Every screen here can be built and A/B tested in Adapty’s Flow Builder, with no app release.</p>
+      <a class="au-btn" href="https://adapty.io/flow-paywall-builder/" target="_blank" rel="noopener">About Flow Builder</a>
+    </div>
+  </div>
+</footer>
+
+<!-- extras: video dialog (CONTENT.video), ?app bar, ?tour overlay (CONTENT.tour) -->
+<dialog class="au-vid" id="vid" aria-label="Walkthrough video">
+  <div class="au-vid-in"><video id="vidEl" controls muted playsinline preload="none"></video></div>
+  <div class="au-vid-bar"><a id="vidDl" download>Download the MP4</a><button type="button" class="au-vid-x" id="vidX">Close</button></div>
+</dialog>
+<div class="au-scrim" id="abScrim"></div>
+<div class="au-appbar" id="appbar">
+  <button type="button" class="au-ab-why" id="abWhy"><i></i><span id="abT"></span><em>Why ↑</em></button>
+  <div class="au-lsw" id="abLang" role="group" aria-label="Language"></div>
+</div>
+<div class="au-tour" aria-hidden="true">
+  <div class="au-tb"><img src="assets/brand/appstore-icon.jpg" alt="">Growth Audit <small>· The Guardian</small></div>
+  <div class="au-tby">Prepared by Adapty</div>
+  <div class="au-tcap" id="tCap"></div>
+  <div class="au-ttap" id="tTap"></div>
+  <div class="au-tprog"><i id="tProg"></i></div>
+  <div class="au-tintro" id="tIntro"></div>
+  <div class="au-tend" id="tEnd"></div>
+</div>
+
+<!-- CONTENT — all the audit's words and numbers, as data. Schema (brand-check enforces it):
+     ideas  : 3–5 rows, ranked (the audit is five ideas, never fifteen). screen = the screen that shows it.
+     panel  : one entry per screen. idea = its number in ideas (1-based) or 0 for a context screen.
+              why on an idea screen reads "<b>Try</b> X, <b>because</b> Y." in ≤ 45 words; iv = its range.
+              why on a context screen is one line saying what it sets up.
+     hero   : three screen ids shown as stills in the hero — run hero-stills.sh after the screens are done.
+     outcome: combined "up to" numbers, PS-deck style, never above the ceiling of the per-idea ranges.
+     sources: public facts only — App Store, their site, their screens. No sales research on this page.
+     EXTRAS (each one hides itself when left empty):
+     langs  : [{"code":"en","name":"English"},{"code":"es","name":"Español · Spain prices"}] — first = the markup's language
+     i18n   : {"es": {"<data-t key>": "text with {tokens}"}} — every data-t key, for every language after the first
+     prices : {"es": {"yr": "39,99 €", …}} — {tokens} in i18n strings; that storefront's real IAP prices
+     labelsI18n: {"es": {"goal": {"a": "…"}}} — C.labels per language (data-bind="label:…")
+     liveUrl: final Pages URL (QR card + video end card); the QR file encodes liveUrl + "?app"
+     video / poster: "assets/walkthrough.mp4" / "assets/walkthrough-poster.jpg" (record-video.sh)
+     compare: {today, proposed, kicker, title, sub, todayCap, rows:[{h, idea, was, now}], kept} — today = a data-aside screen
+     tour   : {segments:[{id, d, st, tap:[selector-in-screen, ms], pop, reveal, end}], captions:{id:{n|k, t, l, o, ol}},
+              introLede, endTitle} — ~30 s total; the last segment has end:true (the end card) -->
+<script type="application/json" id="content">
+{
+ "app": "The Guardian",
+ "state": {
+  "topics": [
+   "environment",
+   "sport"
+  ],
+  "plan": "year",
+  "edition": "us",
+  "supporter": "no"
+ },
+ "labels": {
+  "topics": {
+   "news": "News",
+   "opinion": "Opinion",
+   "sport": "Sport",
+   "culture": "Culture",
+   "lifestyle": "Lifestyle",
+   "environment": "Environment",
+   "science": "Science & technology"
+  }
+ },
+ "chips": {
+  "welcome": "Welcome",
+  "consent": "Consent",
+  "supporter": "Supporter?",
+  "signin": "Sign in",
+  "back": "Welcome back",
+  "topics": "Topics",
+  "edition": "Edition",
+  "mission": "Mission",
+  "paywall": "Paywall",
+  "offer": "On close",
+  "register": "Free account"
+ },
+ "hero": [
+  "mission",
+  "paywall",
+  "supporter"
+ ],
+ "outcome": {
+  "cr": "+20%",
+  "arpu": "+15%"
+ },
+ "ideas": [
+  {
+   "screen": "supporter",
+   "title": "Spot web supporters, register everyone else",
+   "what": "Most supporters pay on theguardian.com. Today the app shows them the same paywall as everyone else, and <code>I already support the Guardian</code> opens a troubleshooting page (vouchers, Subscriber ID, App Store restore). Ask once, after consent: supporters sign in and skip the ask, and everyone else finishes onboarding with a free account that keeps their topics.",
+   "impact": "+10–20%",
+   "il": "registrations, and no paywall for existing supporters"
+  },
+  {
+   "screen": "mission",
+   "title": "Tell the story behind the topic they pick",
+   "what": "You already tailor the ask to the topic. Take it one screen further: a reader who picks Environment sees why climate reporting needs readers (no fossil fuel advertising since 2020), next to one of your real stories, before any price. Only 2% of paywalls personalise the headline.",
+   "impact": "+5–15%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "paywall",
+   "title": "Ask on day one, in the reader’s words",
+   "what": "In our recording, a new reader goes from consent to the home feed, and the ask comes later, from the <code>Support us</code> pill, Settings or an article. Across apps, the onboarding paywall earns about 4x later ones: $170 vs $40 per 1,000 views. Show yours at the end of onboarding, with the headline naming what they follow and $108.99 shown as “Save 39% in year one”.",
+   "impact": "+10–20%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "edition",
+   "title": "One paywall per edition",
+   "what": "US, UK, Australia and Europe each get their own line and their own App Store prices: $108.99, £114.99, A$169.99 and €119.99 a year. Europe converts very differently from the US, so a paywall tuned for one won’t carry to the other. The US gets its own copy, not the UK’s with dollar signs.",
+   "impact": "+5–10%",
+   "il": "CR to purchase, ARPU +5–10%"
+  },
+  {
+   "screen": "offer",
+   "title": "Give closers a second chance",
+   "what": "Closing the paywall today returns to the app. 40% of buyers need more than one view, but only 4% of apps show a second paywall after a close. Offer your six-month plan, $36.99 or $6.17 a month, with <em>Keep reading for free</em> still one tap away.",
+   "impact": "+10–15%",
+   "il": "ARPU"
+  }
+ ],
+ "panel": {
+  "welcome": {
+   "idea": 0,
+   "t": "Your welcome screen, word for word",
+   "why": "Kept as it is. It already promises My Guardian, and the flow delivers it."
+  },
+  "consent": {
+   "idea": 0,
+   "t": "Your consent screen, unchanged",
+   "why": "Every answer now leads to one question: are you already a supporter?"
+  },
+  "supporter": {
+   "idea": 1,
+   "t": "Spot web supporters before you ask",
+   "why": "<b>Try</b> asking “Already a Guardian supporter?” right after consent, <b>because</b> most supporters pay on theguardian.com, and today they meet the paywall first, then a troubleshooting page.",
+   "iv": "Registrations +10–20%",
+   "il": "and no paywall for existing supporters",
+   "also": "Readers who don’t pay still register: see the last screen, <em>Free account</em>."
+  },
+  "signin": {
+   "idea": 0,
+   "t": "Your sign-in page, word for word",
+   "why": "A supporter signs in once, with the account they already pay with on the web."
+  },
+  "back": {
+   "idea": 0,
+   "t": "Supporters skip the ask",
+   "why": "The supporter branch ends here: full access, no paywall, no second payment."
+  },
+  "topics": {
+   "idea": 0,
+   "t": "Your My Guardian topics",
+   "why": "The first topic picked drives the mission screen; all of them name the paywall headline."
+  },
+  "edition": {
+   "idea": 4,
+   "t": "One paywall per edition",
+   "why": "<b>Try</b> separate copy and App Store prices for the US, UK, Australia and Europe, <b>because</b> Europe converts very differently from the US, so a paywall tuned for one won’t carry to the other.",
+   "iv": "CR +5–10%",
+   "il": "to purchase, ARPU +5–10%",
+   "also": "Pick an edition here or above the phone: the mission line, prices and rating follow."
+  },
+  "mission": {
+   "idea": 2,
+   "t": "Tell the story behind the topic",
+   "why": "<b>Try</b> one screen on why the reader’s first topic needs funding, with one of your stories, <b>because</b> only 2% of paywalls personalise the headline, and a reason that matches the reader lands before the price does.",
+   "iv": "CR +5–15%",
+   "il": "to purchase",
+   "also": "Go back to Topics and pick Sport or News first: this screen changes."
+  },
+  "paywall": {
+   "idea": 3,
+   "t": "Ask on day one, in their words",
+   "why": "<b>Try</b> your paywall at the end of onboarding, headline naming what they follow, <b>because</b> across apps the onboarding paywall earns about 4x later ones: $170 vs $40 per 1,000 views.",
+   "iv": "CR +10–20%",
+   "il": "to purchase",
+   "also": "Also here: the annual saving as a number (idea 3), and “I already support the Guardian” goes straight to sign-in (idea 1)."
+  },
+  "offer": {
+   "idea": 5,
+   "t": "Give closers a second chance",
+   "why": "<b>Try</b> your six-month plan when someone closes the paywall, <b>because</b> 40% of buyers need more than one view, yet only 4% of apps show a second paywall after a close.",
+   "iv": "ARPU +10–15%",
+   "il": "from readers who closed the paywall"
+  },
+  "register": {
+   "idea": 0,
+   "t": "Everyone else registers",
+   "why": "Readers who don’t pay still leave with a free account, asked after the ask, with their topics as the reason."
+  }
+ },
+ "langs": [
+  {
+   "code": "us",
+   "name": "US"
+  },
+  {
+   "code": "gb",
+   "name": "UK"
+  },
+  {
+   "code": "au",
+   "name": "Australia"
+  },
+  {
+   "code": "eu",
+   "name": "Europe"
+  }
+ ],
+ "i18n": {
+  "gb": {
+   "region": "{region}",
+   "proof": "{rating} · {ratings} ratings",
+   "pw_badge": "{badge}",
+   "pw_yr": "{yr}",
+   "pw_yrmo": "{yrmo}/month",
+   "pw_then": "{then}",
+   "pw_mo": "{mo}",
+   "pw_intro": "{intro}",
+   "of_price": "{six}",
+   "of_mo": "{sixmo}/month · {sixsave} less than monthly",
+   "of_renew": "Renews every 6 months at {six}. Cancel anytime.",
+   "pw_reg": "{reg}",
+   "mis_reg": "{misreg}",
+   "ed_sub": "{ed}"
+  },
+  "au": {
+   "region": "{region}",
+   "proof": "{rating} · {ratings} ratings",
+   "pw_badge": "{badge}",
+   "pw_yr": "{yr}",
+   "pw_yrmo": "{yrmo}/month",
+   "pw_then": "{then}",
+   "pw_mo": "{mo}",
+   "pw_intro": "{intro}",
+   "of_price": "{six}",
+   "of_mo": "{sixmo}/month · {sixsave} less than monthly",
+   "of_renew": "Renews every 6 months at {six}. Cancel anytime.",
+   "pw_reg": "{reg}",
+   "mis_reg": "{misreg}",
+   "ed_sub": "{ed}"
+  },
+  "eu": {
+   "region": "{region}",
+   "proof": "{rating} · {ratings} ratings",
+   "pw_badge": "{badge}",
+   "pw_yr": "{yr}",
+   "pw_yrmo": "{yrmo}/month",
+   "pw_then": "{then}",
+   "pw_mo": "{mo}",
+   "pw_intro": "{intro}",
+   "of_price": "{six}",
+   "of_mo": "{sixmo}/month · {sixsave} less than monthly",
+   "of_renew": "Renews every 6 months at {six}. Cancel anytime.",
+   "pw_reg": "{reg}",
+   "mis_reg": "{misreg}",
+   "ed_sub": "{ed}"
+  }
+ },
+ "prices": {
+  "gb": {
+   "mo": "£11.99",
+   "yr": "£114.99",
+   "yrmo": "£9.58",
+   "badge": "Save 20% a year",
+   "then": "Renews at £114.99 a year. Cancel anytime.",
+   "intro": "Billed yearly. Prices from the UK App Store.",
+   "six": "£31.99",
+   "sixmo": "£5.33",
+   "sixsave": "56%",
+   "rating": "4.8",
+   "ratings": "255K",
+   "region": "UK",
+   "reg": "Independent journalism with no shareholders and no billionaire owner, funded by readers.",
+   "misreg": "Join readers across the UK who keep it free for everyone.",
+   "ed": "We picked UK from your phone’s region."
+  },
+  "au": {
+   "mo": "$16.99",
+   "yr": "$169.99",
+   "yrmo": "$14.17",
+   "badge": "Save 17% a year",
+   "then": "Renews at $169.99 a year. Cancel anytime.",
+   "intro": "Billed yearly. Prices from the Australian App Store.",
+   "six": "$53.99",
+   "sixmo": "$9.00",
+   "sixsave": "47%",
+   "rating": "4.8",
+   "ratings": "76K",
+   "region": "AU",
+   "reg": "Independent Australian journalism, funded by readers, with no owner to answer to.",
+   "misreg": "Join readers across Australia who keep it free for everyone.",
+   "ed": "We picked Australia from your phone’s region."
+  },
+  "eu": {
+   "mo": "€11.99",
+   "yr": "€119.99",
+   "yrmo": "€10.00",
+   "badge": "Save 17% a year",
+   "then": "Renews at €119.99 a year. Cancel anytime.",
+   "intro": "Billed yearly. Prices from the App Store in the euro area.",
+   "six": "€34.99",
+   "sixmo": "€5.83",
+   "sixsave": "51%",
+   "rating": "4.8",
+   "ratings": "15K",
+   "region": "EU",
+   "reg": "Independent journalism for Europe, in English, funded by readers.",
+   "misreg": "Join readers across Europe who keep it free for everyone.",
+   "ed": "We picked Europe from your phone’s region."
+  }
+ },
+ "labelsI18n": {},
+ "liveUrl": "https://eddieatadapty.github.io/guardian-flow-rebuild-v2/",
+ "video": "assets/walkthrough.mp4",
+ "poster": "assets/walkthrough-poster.jpg",
+ "compare": {
+  "today": "today",
+  "proposed": "paywall",
+  "kicker": "The paywall, side by side",
+  "title": "Your paywall today, and the one we’d test.",
+  "sub": "Same components, same prices. Five things change.",
+  "todayCap": "rebuilt from your iOS app",
+  "rows": [
+   {
+    "h": "When it shows",
+    "idea": 3,
+    "was": "Later: the Support us pill, Settings, an article",
+    "now": "At the end of onboarding, after the mission screen"
+   },
+   {
+    "h": "Headline",
+    "idea": 2,
+    "was": "“Support the Guardian”, then a 90-word paragraph",
+    "now": "“Support the journalism you follow”, naming the reader’s topics"
+   },
+   {
+    "h": "Edition",
+    "idea": 4,
+    "was": "One paywall in our US recording",
+    "now": "A line and App Store prices per edition: US, UK, Australia, Europe"
+   },
+   {
+    "h": "I already support",
+    "idea": 1,
+    "was": "A troubleshooting page: vouchers, Subscriber ID, restore",
+    "now": "Your sign-in, then full access with no ask"
+   },
+   {
+    "h": "On close",
+    "idea": 5,
+    "was": "Back to the app",
+    "now": "Six months for $36.99, $6.17 a month"
+   }
+  ],
+  "kept": "Kept: your blue serif headline, the $108.99 introductory price and its renewal line, the yellow badge and “Support us now”, “I already support the Guardian” and the links underneath."
+ },
+ "tour": {
+  "introLede": "Five ideas to turn more Guardian readers into supporters.",
+  "endTitle": "Five ideas, built into your own onboarding.",
+  "segments": [
+   {
+    "id": "welcome",
+    "d": 3200,
+    "tap": [
+     ".g-cta",
+     2850
+    ]
+   },
+   {
+    "id": "consent",
+    "d": 1500,
+    "tap": [
+     ".g-lt",
+     1150
+    ]
+   },
+   {
+    "id": "supporter",
+    "d": 3000,
+    "tap": [
+     ".g-ghost",
+     2650
+    ]
+   },
+   {
+    "id": "topics",
+    "d": 1700,
+    "st": {
+     "topics": []
+    },
+    "tap": [
+     "[data-toggle=\"topics:environment\"]",
+     1400
+    ]
+   },
+   {
+    "id": "topics",
+    "d": 1100,
+    "st": {
+     "topics": [
+      "environment"
+     ]
+    },
+    "tap": [
+     "[data-toggle=\"topics:sport\"]",
+     800
+    ]
+   },
+   {
+    "id": "topics",
+    "d": 1100,
+    "st": {
+     "topics": [
+      "environment",
+      "sport"
+     ]
+    },
+    "tap": [
+     ".g-foot .g-cta",
+     800
+    ]
+   },
+   {
+    "id": "edition",
+    "d": 1900,
+    "st": {
+     "edition": "us"
+    },
+    "tap": [
+     "[data-pick=\"edition:gb\"]",
+     1500
+    ]
+   },
+   {
+    "id": "edition",
+    "d": 1200,
+    "st": {
+     "edition": "gb"
+    },
+    "tap": [
+     ".g-foot .g-cta",
+     900
+    ]
+   },
+   {
+    "id": "mission",
+    "d": 4000,
+    "reveal": ".g-stats",
+    "tap": [
+     ".g-ycta",
+     3650
+    ]
+   },
+   {
+    "id": "paywall",
+    "d": 3800,
+    "pop": ".g-badge",
+    "tap": [
+     ".s-x",
+     3450
+    ]
+   },
+   {
+    "id": "offer",
+    "d": 3200,
+    "tap": [
+     ".g-free",
+     2850
+    ]
+   },
+   {
+    "id": "register",
+    "d": 2300
+   },
+   {
+    "id": "register",
+    "d": 3500,
+    "end": true
+   }
+  ],
+  "captions": {
+   "welcome": {
+    "k": "Context",
+    "t": "Your welcome screen",
+    "l": "Kept word for word."
+   },
+   "consent": {
+    "k": "Context",
+    "t": "Your consent screen",
+    "l": "Unchanged. Now it leads to one question."
+   },
+   "supporter": {
+    "n": 1,
+    "t": "Spot web supporters",
+    "l": "Supporters sign in and skip the ask.",
+    "o": "+10–20%",
+    "ol": "registrations"
+   },
+   "topics": {
+    "k": "Context",
+    "t": "Your My Guardian topics",
+    "l": "The first pick drives the next screens."
+   },
+   "edition": {
+    "n": 4,
+    "t": "One paywall per edition",
+    "l": "US, UK, Australia, Europe: own copy, own prices.",
+    "o": "CR +5–10%",
+    "ol": "to purchase"
+   },
+   "mission": {
+    "n": 2,
+    "t": "The story behind the topic",
+    "l": "Picked Environment? See why climate reporting needs readers.",
+    "o": "CR +5–15%",
+    "ol": "to purchase"
+   },
+   "paywall": {
+    "n": 3,
+    "t": "Ask on day one",
+    "l": "Onboarding paywalls earn about 4x later ones.",
+    "o": "CR +10–20%",
+    "ol": "to purchase"
+   },
+   "offer": {
+    "n": 5,
+    "t": "A second chance on close",
+    "l": "Your six-month plan, not a dead end.",
+    "o": "ARPU +10–15%",
+    "ol": "from readers who closed"
+   },
+   "register": {
+    "k": "Context",
+    "t": "Everyone else registers",
+    "l": "A free account that keeps their topics."
+   }
+  }
+ },
+ "grounding": "Impact ranges are Adapty’s expected effect from teardowns and A/B tests across 30,000+ subscription apps, not measured lift for the Guardian. Benchmarks are cross-category: there’s no news category in the report. They overlap, so they don’t add up.",
+ "sources": [
+  {
+   "group": "Prices",
+   "items": [
+    {
+     "dt": "US: $14.99 a month · $108.99 first year, then $144.99 · $36.99 for six months",
+     "dd": "Your live paywall, word for word (<a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216562\" target=\"_blank\" rel=\"noopener\">recorded screen</a>). $14.99, $144.99 and $36.99 are in the <a href=\"https://apps.apple.com/us/app/id409128287\" target=\"_blank\" rel=\"noopener\">US App Store</a> In-App Purchases list; $108.99 is the introductory offer your paywall shows. <em>Not used:</em> $52.99 (also “Premium 6-month”), $6.99, $129.99. We assumed the $36.99 six-month plan is live; please confirm."
+    },
+    {
+     "dt": "UK: £11.99 · £114.99 · £31.99",
+     "dd": "<a href=\"https://apps.apple.com/gb/app/id409128287\" target=\"_blank\" rel=\"noopener\">UK App Store</a> IAP list. No introductory price is visible there, so the UK edition shows the full annual price. <em>Not used:</em> £5.99, £52.99."
+    },
+    {
+     "dt": "Australia: $16.99 · $169.99 · $53.99",
+     "dd": "<a href=\"https://apps.apple.com/au/app/id409128287\" target=\"_blank\" rel=\"noopener\">Australian App Store</a> IAP list. <em>Not used:</em> $9.99, $79.99."
+    },
+    {
+     "dt": "Europe: €11.99 · €119.99 · €34.99",
+     "dd": "The same prices on the <a href=\"https://apps.apple.com/de/app/id409128287\" target=\"_blank\" rel=\"noopener\">German</a>, <a href=\"https://apps.apple.com/fr/app/id409128287\" target=\"_blank\" rel=\"noopener\">French</a> and <a href=\"https://apps.apple.com/ie/app/id409128287\" target=\"_blank\" rel=\"noopener\">Irish</a> App Stores, where the app is listed as “The Guardian - EU &amp; World News”. <em>Not used:</em> €6.99, €52.99."
+    },
+    {
+     "dt": "39% · $9.08 · $6.17, and the other editions",
+     "dd": "Our maths: $108.99 ÷ 12 = $9.08 against $14.99 a month; $36.99 ÷ 6 = $6.17. UK 20% (£114.99 vs £143.88), Australia 17% ($169.99 vs $203.88), Europe 17% (€119.99 vs €143.88), six months 56% / 47% / 51% less than monthly."
+    }
+   ]
+  },
+  {
+   "group": "Proof",
+   "items": [
+    {
+     "dt": "Ratings per edition",
+     "dd": "US 4.9 from 113K (4.86 from 113,494), UK 4.8 from 255K, Australia 4.8 from 76K, Germany 4.8 from 15K (14,872): each App Store listing."
+    },
+    {
+     "dt": "Over 1 million recurring digital supporters, 180+ countries",
+     "dd": "<a href=\"https://www.theguardian.com/about\" target=\"_blank\" rel=\"noopener\">theguardian.com/about</a>."
+    },
+    {
+     "dt": "Scott Trust ownership · no fossil fuel advertising since 2020",
+     "dd": "Public statements on theguardian.com, used on the mission screen. The mission copy itself is ours."
+    }
+   ]
+  },
+  {
+   "group": "Benchmarks",
+   "items": [
+    {
+     "dt": "$170 vs $40 per 1,000 views · 40% need more than one view · 4% show a second paywall · 2% personalise the headline",
+     "dd": "Adapty’s State of Paywalls report. There is no news category in it, so these are cross-category numbers."
+    },
+    {
+     "dt": "Europe converts differently from the US",
+     "dd": "Same report, regional cut: conversion and price response differ enough that a paywall tuned for one region doesn’t carry to the other."
+    },
+    {
+     "dt": "56% still paying three months after a win-back",
+     "dd": "Adapty data across subscription apps: returning subscribers who came back on a win-back offer."
+    }
+   ]
+  },
+  {
+   "group": "Features and copy",
+   "items": [
+    {
+     "dt": "Welcome, consent, paywall, sign-in and account copy",
+     "dd": "Your iOS app, recorded by ScreensDesign (<a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216142\" target=\"_blank\" rel=\"noopener\">welcome</a>, <a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216145\" target=\"_blank\" rel=\"noopener\">consent</a>, <a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216562\" target=\"_blank\" rel=\"noopener\">paywall</a>, <a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216567\" target=\"_blank\" rel=\"noopener\">“I already support”</a>, <a href=\"https://screensdesign.com/apps/the-guardian-live-world-news/?vs=216153\" target=\"_blank\" rel=\"noopener\">sign-in</a>)."
+    },
+    {
+     "dt": "Stories, categories and podcasts",
+     "dd": "Headlines and the seven My Guardian categories are from your App Store screenshots and the recorded home feed."
+    },
+    {
+     "dt": "Edition, mission and supporter copy",
+     "dd": "Ours, written in your voice. The UK, Australia and Europe lines are our translation of the idea, not your copy."
+    }
+   ]
+  },
+  {
+   "group": "Design",
+   "items": [
+    {
+     "dt": "Colours",
+     "dd": "theguardian.com tokens (#052962 navy, #ffe500 yellow, #0077b6 blue, the section colours) plus colours sampled off your paywall, welcome screen and sign-in page."
+    },
+    {
+     "dt": "Type",
+     "dd": "GH Guardian Headline, Guardian Text Egyptian and Text Sans are licensed, so the prototype uses Source Serif 4 and Source Sans 3."
+    },
+    {
+     "dt": "Art",
+     "dd": "Cut from your App Store screenshots (category illustrations, photos, the masthead with its region label painted over) and the welcome icons from your app."
+    }
+   ]
+  },
+  {
+   "group": "What we couldn’t see",
+   "items": [
+    {
+     "dt": "Your topic-based paywall",
+     "dd": "Our recording shows no topic picker or paywall in onboarding, so the topic screen and the mission screen show how we’d build on it, not your current version."
+    },
+    {
+     "dt": "Your UK, Australia and Europe paywalls, Android, your test history",
+     "dd": "We only recorded the US paywall, so we can’t say how much copy changes by edition today."
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<script>
+/* The Guardian v2: the edition picked in the flow and the audit's edition switch stay in step; the mission screen and the
+   paywall read the topics in the order they were picked; status bar turns white on navy screens. */
+var TOPIC_ORDER = ['news', 'opinion', 'sport', 'culture', 'lifestyle', 'environment', 'science'];
+var SCOTT = 'The Guardian is owned by the Scott Trust, so no one can tell our reporters what to cover. Readers fund that independence.';
+var OPEN = 'Every Guardian article is free to read. Readers who can afford to support us keep it that way for those who can’t.';
+var MIS = {
+  environment: {h: 'Climate reporting with no fossil fuel money behind it.', tag: 'George Monbiot', st: 'We’re letting big corporations gamble with our lives', img: 'assets/crop/img-monbiot.png',
+    p: 'In 2020 we stopped taking advertising from fossil fuel companies, so our climate reporting relies on readers like you.'},
+  news: {h: 'No billionaire owner. No shareholders.', tag: 'US universities', st: 'Professor sues Texas university that terminated contract after Palestine talk', img: 'assets/crop/img-texas.png', p: SCOTT},
+  opinion: {h: 'Opinion that answers to readers, not owners.', tag: 'The Guardian view', st: 'The Dutch election: an uplifting victory for the politics of hope not hate', img: 'assets/crop/illo-opinion.png', il: 1, p: SCOTT},
+  sport: {h: 'Sport reporting that follows the story off the pitch.', tag: 'Sport', st: 'From Hubbard to sex testing in five years: why the Olympics U-turned on transgender rules', img: 'assets/crop/img-olympics.png',
+    p: 'The questions behind a result take time and reporters to answer. Readers pay for that time, and keep it free for everyone.'},
+  culture: {h: 'Culture writing that stays open to everyone.', tag: 'Oscars 2026 live', st: 'Oscars 2026: One Battle After Another wins best picture', img: 'assets/crop/illo-culture.png', il: 1, p: OPEN},
+  lifestyle: {h: 'Stories about real lives, open to everyone.', tag: 'Parkinson’s disease', st: 'I thought it was the end, but dancing changed everything', img: 'assets/crop/img-dance.png', p: OPEN},
+  science: {h: 'Science and tech reporting with no one to please.', tag: 'Technology', st: 'Federal judge sides with Anthropic in first round of standoff with Pentagon', img: 'assets/crop/img-anthropic.png', p: SCOTT}
+};
+var DARK = {consent: 1, supporter: 1, back: 1, topics: 1, edition: 1, mission: 1, register: 1};
+var ED;
+function picks(){ var p = (S.topics || []).filter(function(k){ return TOPIC_ORDER.indexOf(k) > -1; }); return p.length ? p : ['environment', 'sport']; }
+function sbar(id){ var sb = document.querySelector('.sbar'); if (sb) sb.style.color = DARK[id] ? 'var(--b-primary-ink)' : 'var(--b-ink)'; }
+function q(sel, f){ document.querySelectorAll(sel).forEach(f); }
+window.onSync = function(S){
+  if (ED === undefined) ED = S.edition;
+  /* edition ⇄ storefront: a pick on the edition screen switches prices and copy; the audit's switch moves the pick */
+  if (S.edition !== ED) { ED = S.edition; if (S.lang !== S.edition) { setLang(S.edition); return; } }
+  else if (S.lang !== S.edition) { S.edition = ED = S.lang; sync(); return; }
+  var shown = picks(), lead = shown[0], m = MIS[lead];
+  var names = shown.map(function(k){ return C.labels.topics[k]; });
+  var txt = names.length < 2 ? names.join('') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  q('[data-bind="topiclist"]', function(e){ e.textContent = txt; });
+  q('.g-tw', function(e){ e.textContent = (S.topics || []).length === 1 ? 'topic' : 'topics'; });
+  q('[data-mk]', function(e){ e.textContent = 'Because you follow ' + C.labels.topics[lead]; });
+  q('[data-mh]', function(e){ e.textContent = m.h; });
+  q('[data-mp]', function(e){ e.textContent = m.p; });
+  q('[data-mtag]', function(e){ e.textContent = m.tag; e.className = 't-' + lead; });
+  q('[data-mst]', function(e){ e.textContent = m.st; });
+  q('[data-mimg]', function(e){ e.src = m.img; e.classList.toggle('g-il', !!m.il); });
+  if (cur) sbar(cur);
+};
+window.onEnter = function(id){ sbar(id); };
+</script>
+<script>
+/* ============ engine — generic, do not fork per app ============ */
+var C = JSON.parse(document.getElementById('content').textContent);
+var S = C.state, scr = {}, ORDER = [], hist = [], cur = null, Q = location.search;
+var SHOT = /[?&](shot|phone|tour)\b/.test(Q), HERO = /[?&]hero\b/.test(Q);
+/* a screen with data-aside (e.g. the paywall TODAY for the side-by-side) renders for stills but is not part of the flow */
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id] = s; if (!s.hasAttribute('data-aside')) ORDER.push(s.dataset.id); });
+if (/[?&]shot\b/.test(Q)) document.documentElement.classList.add('shot');
+if (/[?&]phone\b/.test(Q)) document.documentElement.classList.add('shot', 'phoneonly');
+if (/[?&]clear\b/.test(Q)) document.documentElement.classList.add('clear');
+var IDEAS = (C.ideas || []).length;
+
+/* ---- languages: markup is the first language; C.i18n[lang][data-t key] the others; {tokens} from C.prices[lang] ---- */
+var LANGS = C.langs || [], BASE = LANGS.length ? LANGS[0].code : 'en', LANG_DONE = BASE, BASE_LABELS = JSON.parse(JSON.stringify(C.labels || {}));
+if (!S.lang) S.lang = BASE;
+function fillP(s, l){ var P = (C.prices || {})[l] || {}; return String(s).replace(/\{(\w+)\}/g, function(m, k){ return k in P ? P[k] : m; }); }
+function applyLang(){
+  var l = S.lang || BASE; if (l === LANG_DONE) return;
+  var T = (C.i18n || {})[l] || {};
+  document.querySelectorAll('.phone [data-t]').forEach(function(el){
+    if (el._base == null) el._base = el.innerHTML;
+    el.innerHTML = l === BASE || T[el.dataset.t] == null ? el._base : fillP(T[el.dataset.t], l);
+  });
+  C.labels = JSON.parse(JSON.stringify(BASE_LABELS));
+  var LL = (C.labelsI18n || {})[l] || {}; Object.keys(LL).forEach(function(k){ C.labels[k] = LL[k]; });
+  LANG_DONE = l;
+}
+function setLang(l){
+  if (!LANGS.some(function(x){ return x.code === l; })) return;
+  S.lang = l; sync();
+  document.querySelectorAll('[data-setlang]').forEach(function(b){ b.classList.toggle('on', b.dataset.setlang === l); });
+  if (window.onLang) window.onLang(l);
+}
+
+function lab(key){ var v = S[key]; var L = C.labels[key]; if (Array.isArray(v)) return v.map(function(x){ return L && L[x] || x; }).join(', '); return (L && L[v]) || v; }
+function sync(){
+  applyLang();
+  document.querySelectorAll('[data-bind]').forEach(function(el){
+    var b = el.dataset.bind, m = b.split(':');
+    el.textContent = m[0] === 'label' ? lab(m[1]) : m[0] === 'count' ? (S[m[1]] || []).length : (S[b] == null ? '' : S[b]);
+  });
+  document.querySelectorAll('[data-pick]').forEach(function(el){ var p = el.dataset.pick.split(':'); el.classList.toggle('on', S[p[0]] === p[1]); });
+  document.querySelectorAll('[data-toggle]').forEach(function(el){ var p = el.dataset.toggle.split(':'); el.classList.toggle('on', (S[p[0]] || []).indexOf(p[1]) > -1); });
+  document.querySelectorAll('[data-requires]').forEach(function(el){ el.disabled = !(S[el.dataset.requires] || []).length; });
+  document.querySelectorAll('[data-show]').forEach(function(el){ var p = el.dataset.show.split(':'); el.style.display = String(S[p[0]]) === p[1] ? '' : 'none'; });
+  if (window.onSync) window.onSync(S);
+}
+function show(id, dir){
+  var from = scr[cur], to = scr[id]; if (!to || id === cur) return;
+  var sheet = to.classList.contains('sheet');
+  if (from){
+    from.classList.remove('is-active');
+    if (sheet) from.classList.add('under');                                   /* a sheet slides up over the screen that opened it */
+    else if (dir === 'fwd' && !from.classList.contains('sheet')) from.classList.add('is-past');
+  }
+  if (!sheet) Object.keys(scr).forEach(function(k){ var u = scr[k]; if (u !== to && u.classList.contains('under')) { u.classList.remove('under'); if (dir === 'fwd') u.classList.add('is-past'); } });
+  to.classList.remove('is-past', 'under'); to.classList.add('is-active'); cur = id;
+  paint(); if (window.onEnter) window.onEnter(id, S);
+}
+function go(id){ if (cur) hist.push(cur); show(id, 'fwd'); }
+function back(){ if (hist.length) { var p = hist.pop(); scr[cur].classList.remove('is-active'); show(p, 'back'); } }
+function jump(id){
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active', 'is-past', 'under'); });
+  var i = ORDER.indexOf(id); hist = ORDER.slice(0, i < 0 ? 0 : i); cur = null;
+  ORDER.slice(0, i).forEach(function(k){ if (!scr[k].classList.contains('sheet')) scr[k].classList.add('is-past'); });
+  if (scr[id] && scr[id].classList.contains('sheet')) {                        /* jumping to a sheet: its opener stays visible under it */
+    for (var j = i - 1; j >= 0; j--) if (!scr[ORDER[j]].classList.contains('sheet')) { scr[ORDER[j]].classList.remove('is-past'); scr[ORDER[j]].classList.add('under'); break; }
+  }
+  show(id, 'jump');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+}
+function stepBy(d){ var i = ORDER.indexOf(cur) + d; if (i >= 0 && i < ORDER.length) jump(ORDER[i]); }
+function jumpTo(id){
+  var p = document.getElementById('prototype');
+  if (p && !document.documentElement.classList.contains('appmode')) p.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  jump(id);
+}
+function paint(){
+  sync();
+  var c = document.getElementById('chips');
+  if (!c.childElementCount) ORDER.forEach(function(id){
+    var p = C.panel[id] || {}, b = document.createElement('button');
+    b.className = 'au-chip'; b.type = 'button'; b.dataset.id = id; b.setAttribute('role', 'tab');
+    b.innerHTML = (p.idea ? '<i>' + p.idea + '</i>' : '') + ((C.chips && C.chips[id]) || id);
+    b.onclick = function(){ jump(id); };
+    c.appendChild(b);
+  });
+  c.querySelectorAll('.au-chip').forEach(function(b){ var on = b.dataset.id === cur; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  var d = C.panel[cur] || {t: cur, why: ''}, n = ORDER.indexOf(cur) + 1;
+  document.getElementById('panel').innerHTML =
+    (d.idea ? '<div class="au-pn-k"><i></i>Idea ' + d.idea + ' of ' + IDEAS + '</div>' : '<div class="au-pn-k au-ctx"><i></i>Context</div>') +
+    '<h3 class="au-pn-t">' + d.t + '</h3><p class="au-pn-h">' + d.why + '</p>' +
+    (d.iv ? '<div class="au-pn-o"><div class="au-lab">Potential outcome · based on Adapty data</div><div class="au-val"><mark>' + d.iv + '</mark></div><div class="au-sub">' + (d.il || '') + '</div></div>' : '') +
+    (d.also ? '<p class="au-pn-a">' + d.also + '</p>' : '') +
+    '<div class="au-pn-nav"><button type="button" onclick="stepBy(-1)"' + (n <= 1 ? ' disabled' : '') + '>‹ Previous</button><span>Screen ' + n + ' of ' + ORDER.length + '</span><button type="button" onclick="stepBy(1)"' + (n === ORDER.length ? ' disabled' : '') + '>Next ›</button></div>';
+  var ab = document.getElementById('abT'); if (ab) ab.textContent = (d.idea ? 'Idea ' + d.idea + ' of ' + IDEAS + ' · ' : '') + (d.t || '');
+}
+document.addEventListener('click', function(e){
+  var j = e.target.closest('[data-jumpto]'); if (j){ e.preventDefault(); jumpTo(j.dataset.jumpto); return; }
+  var L = e.target.closest('[data-setlang]'); if (L){ setLang(L.dataset.setlang); return; }
+  if (e.target.closest('[data-langtoggle]') && LANGS.length > 1){ var k = LANGS.findIndex(function(x){ return x.code === S.lang; }); setLang(LANGS[(k + 1) % LANGS.length].code); return; }
+  var el = e.target.closest('[data-go],[data-back],[data-pick],[data-toggle]'); if (!el) return;
+  if (el.dataset.pick){ var p = el.dataset.pick.split(':'); S[p[0]] = p[1]; sync(); if (el.dataset.advance) setTimeout(function(){ go(el.dataset.advance); }, 170); return; }
+  if (el.dataset.toggle){ var q = el.dataset.toggle.split(':'), a = S[q[0]] = S[q[0]] || [], i = a.indexOf(q[1]); if (i > -1) a.splice(i, 1); else a.push(q[1]); sync(); return; }
+  if ('back' in el.dataset) return back();
+  go(el.dataset.go);
+});
+document.querySelectorAll('[data-input]').forEach(function(inp){
+  inp.value = S[inp.dataset.input] || ''; inp.addEventListener('input', function(){ S[inp.dataset.input] = inp.value.trim() || 'there'; sync(); });
+});
+function $(id){ return document.getElementById(id); }
+
+/* hero stills, shortlist, outcome, sources — from CONTENT */
+$('heroPhones').innerHTML = (C.hero || []).map(function(id, i){
+  var pos = ['l', 'c', 'r'][i] || 'r', t = (C.chips && C.chips[id]) || id;
+  return '<button class="au-hp au-' + pos + '" data-jumpto="' + id + '" aria-label="Open ' + t + '"><img src="assets/hero/' + id + '.png" alt=""></button>';
+}).join('');
+$('ideaList').innerHTML = (C.ideas || []).map(function(r, i){
+  return '<article class="au-idea"><div class="au-num">0' + (i + 1) + '</div><div><h3>' + r.title + '</h3><p>' + r.what + '</p>' +
+    '<button type="button" class="au-lnk" data-jumpto="' + r.screen + '">See it on the screen</button></div>' +
+    '<div class="au-imp"><div class="au-v"><mark>' + r.impact + '</mark></div><div class="au-l">' + r.il + '</div></div></article>';
+}).join('');
+var O = C.outcome || {};
+$('bandNums').innerHTML =
+  (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') +
+  (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '');
+$('bandFn').textContent = C.grounding;
+$('fine').textContent = C.grounding + ' Prepared by Adapty.';
+$('srcBody').innerHTML = C.sources.map(function(g){
+  return '<div><h4>' + g.group + '</h4><dl>' + g.items.map(function(it){ return '<dt>' + it.dt + '</dt><dd>' + it.dd + '</dd>'; }).join('') + '</dl></div>';
+}).join('');
+function openSrc(){ var d = $('srcDetails'); d.open = true; d.scrollIntoView({block: 'start'}); }
+
+/* ---- extras: language control, the paywall side by side, QR / phone view, the video ---- */
+if (LANGS.length > 1) {
+  $('langRow').hidden = false;
+  var lb = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.name + '</button>'; }).join('');
+  $('langSw').innerHTML = lb;
+  $('abLang').innerHTML = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.code.toUpperCase() + '</button>'; }).join('');
+}
+var CM = C.compare;
+if (CM && scr[CM.today] && scr[CM.proposed]) {
+  $('compare').hidden = false; $('navCompare').hidden = false;
+  $('cmpBody').innerHTML = '<div class="au-ideas-h"><p class="au-kicker">' + (CM.kicker || 'The paywall, side by side') + '</p><h2 class="au-h2">' + (CM.title || 'Today and proposed.') + (CM.sub ? ' <span>' + CM.sub + '</span>' : '') + '</h2></div>' +
+    '<div class="au-cmp"><figure><img src="assets/hero/' + CM.today + '.png" alt="Your paywall today"><figcaption>Today <span>· ' + (CM.todayCap || 'rebuilt from your recording') + '</span></figcaption></figure>' +
+    '<ol class="au-chg">' + (CM.rows || []).map(function(r){
+      return '<li><h4>' + r.h + (r.idea ? ' <i>Idea ' + r.idea + '</i>' : '') + '</h4><span class="au-was"><em>Today</em>' + r.was + '</span><span class="au-now"><em>Proposed</em>' + r.now + '</span></li>';
+    }).join('') + '</ol>' +
+    '<figure><button type="button" class="au-cmp-go" data-jumpto="' + CM.proposed + '" aria-label="Open the proposed paywall"><img src="assets/hero/' + CM.proposed + '.png" alt="The proposed paywall"></button><figcaption>Proposed <span>· tap to try it</span></figcaption></figure></div>' +
+    (CM.kept ? '<p class="au-kept">' + CM.kept + '</p>' : '');
+}
+if (C.liveUrl) { $('qrCard').hidden = false; $('qrMob').hidden = false; }
+if (/[?&]app\b/.test(Q)) {
+  var H0 = document.documentElement; H0.classList.add('appmode');
+  var openP = function(o){ H0.classList.toggle('au-open', o); $('abWhy').querySelector('em').textContent = o ? 'Close ↓' : 'Why ↑'; };
+  $('abWhy').onclick = function(){ openP(!H0.classList.contains('au-open')); };
+  $('abScrim').onclick = function(){ openP(false); };
+}
+if (C.video) {
+  var dlg = $('vid'), vel = $('vidEl'); vel.src = C.video; if (C.poster) vel.poster = C.poster; $('vidDl').href = C.video;
+  $('heroVideo').hidden = false;
+  $('heroVideo').onclick = function(){ dlg.showModal(); vel.play().catch(function(){}); };
+  $('vidX').onclick = function(){ dlg.close(); };
+  dlg.addEventListener('close', function(){ vel.pause(); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+}
+
+/* ---- ?tour: a deterministic walkthrough from C.tour — tourAt(ms) paints one frame; record-video.sh records it ---- */
+function tourInit(){
+  var T = C.tour, H = document.documentElement, TR = T.transition || 360;
+  H.classList.add('tourmode', 'shot'); document.body.classList.add('nofx');
+  var SEG = T.segments, START = [], STATE = [], UNDER = [], acc = 0, st = JSON.parse(JSON.stringify(C.state));
+  SEG.forEach(function(s, i){
+    START.push(acc); acc += s.d;
+    Object.keys(s.st || {}).forEach(function(k){ st[k] = s.st[k]; }); STATE.push(JSON.parse(JSON.stringify(st)));
+    var u = null; if (scr[s.id].classList.contains('sheet')) for (var j = i - 1; j >= 0; j--) if (!scr[SEG[j].id].classList.contains('sheet')) { u = SEG[j].id; break; }
+    UNDER.push(u);
+  });
+  var TOTAL = acc, capEl = $('tCap'), tap = $('tTap'), pressed = null, popped = [];
+  $('tIntro').innerHTML = '<p class="au-eyebrow"><i></i>' + document.querySelector('.au-top-hero .au-eyebrow').textContent + '</p><h1 class="au-display">' + C.app + '</h1>' +
+    '<p class="au-lede">' + (T.introLede || document.querySelector('.au-top-hero .au-lede').innerHTML) + '</p>';
+  $('tEnd').innerHTML = '<p class="au-eyebrow"><i></i>Growth Audit · ' + C.app + '</p><h2 class="au-te-h">' + (T.endTitle || 'Five ideas, built into your own onboarding.') + '</h2>' +
+    '<div class="au-te-n">' + (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') + (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '') + '</div>' +
+    (C.liveUrl ? '<div class="au-te-q"><img src="assets/qr-app.png" alt=""><div><b>Try it on your phone</b><span>' + C.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '</span></div></div>' : '') +
+    '<p class="au-te-f">' + C.grounding + '</p>';
+  function ease(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function easeBack(x){ var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+  function capHTML(c){
+    c = c || {k: '', t: '', l: ''};
+    return '<div class="au-tk' + (c.n ? '' : ' au-ctx') + '"><i></i>' + (c.n ? 'Idea ' + c.n + ' of ' + IDEAS : (c.k || 'Context')) + '</div><h2 class="au-tt">' + c.t + '</h2><p class="au-tl">' + (c.l || '') + '</p>' +
+      (c.o ? '<div class="au-to"><small>Potential outcome · based on Adapty data</small><b><mark>' + c.o + '</mark></b><span>' + (c.ol || '') + '</span></div>' : '');
+  }
+  function place(id, tf, z){ scr[id].style.transform = tf; scr[id].style.zIndex = z; }
+  window.TOUR_MS = TOTAL;
+  window.tourAt = function(ms){
+    ms = Math.max(0, Math.min(TOTAL - 1, ms));
+    var i = 0; while (i < SEG.length - 1 && ms >= START[i + 1]) i++;
+    var s = SEG[i], local = ms - START[i], prev = i > 0 ? SEG[i - 1] : null;
+    Object.keys(STATE[i]).forEach(function(k){ S[k] = STATE[i][k]; }); sync();
+    var moving = prev && prev.id !== s.id && local < TR, p = moving ? ease(local / TR) : 1;
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('is-active', 'is-past', 'under'); place(k, 'translateX(100%)', 0); });
+    var B = scr[s.id];
+    if (moving) {
+      if (B.classList.contains('sheet')) { place(prev.id, 'none', 1); B.style.transform = 'translateY(' + (1 - p) * 100 + '%)'; }
+      else {
+        var slide = 'translateX(' + (-28 * p) + '%)'; place(prev.id, slide, 1); B.style.transform = 'translateX(' + (1 - p) * 100 + '%)';
+        if (UNDER[i - 1]) place(UNDER[i - 1], slide, 0);
+      }
+    } else B.style.transform = 'none';
+    B.style.zIndex = 2;
+    if (UNDER[i] && !moving) place(UNDER[i], 'none', 1);
+    /* optional reveal: s.pop scales an element in, s.reveal fades one in a beat later */
+    popped.forEach(function(e){ e.style.transform = ''; e.style.opacity = ''; }); popped = [];
+    var q = Math.max(0, Math.min(1, (local - 250) / 550));
+    if (s.pop) { var pe = B.querySelector(s.pop); if (pe) { pe.style.transform = 'scale(' + (.55 + .45 * easeBack(q)) + ')'; pe.style.opacity = Math.min(1, q * 1.6); popped.push(pe); } }
+    if (s.reveal) { var re = B.querySelector(s.reveal); if (re) { re.style.opacity = Math.max(0, Math.min(1, (local - 520) / 300)); popped.push(re); } }
+    /* caption crossfades at screen changes; waits for the intro, gives way to the end card */
+    var key = s.id, op = 1;
+    if (moving) { if (p < .5) { key = prev.id; op = 1 - p * 2; } else op = p * 2 - 1; }
+    if (capEl.dataset.k !== key) { capEl.innerHTML = capHTML(T.captions[key]); capEl.dataset.k = key; }
+    var io = ms < 1100 ? 1 : Math.max(0, 1 - (ms - 1100) / 300), eo = s.end ? Math.min(1, local / 350) : 0;
+    capEl.style.opacity = op * Math.max(0, Math.min(1, (ms - 1400) / 300)) * (1 - eo);
+    /* the finger: fades in, taps, ripples out. Selectors are scoped to the screen */
+    tap.style.opacity = 0; if (pressed) { pressed.style.opacity = ''; pressed = null; }
+    if (s.tap) {
+      var el = B.querySelector(s.tap[0]), dt = local - s.tap[1];
+      if (el && dt > -260 && dt < 420) {
+        var r = el.getBoundingClientRect();
+        tap.style.left = (r.left + r.width / 2) + 'px'; tap.style.top = (r.top + r.height / 2) + 'px';
+        if (dt < 0) { tap.style.opacity = (dt + 260) / 260 * .9; tap.style.transform = 'scale(1)'; }
+        else { tap.style.opacity = .9 * (1 - dt / 420); tap.style.transform = 'scale(' + (1 + dt / 420 * .9) + ')'; }
+        if (dt >= 0 && dt < 160) { el.style.opacity = .72; pressed = el; }
+      }
+    }
+    $('tIntro').style.opacity = T.intro === false ? 0 : io;
+    $('tEnd').style.opacity = eo;
+    $('tProg').style.width = (ms / TOTAL * 100) + '%';
+    cur = s.id;
+    return i;
+  };
+  var tm = /[?&]t=(\d+)/.exec(Q); tourAt(tm ? +tm[1] : 0);
+}
+
+/* boot: #<screen-id> deep-links a screen (shoot.sh / hero-stills.sh use it); ?lang=xx picks the language */
+(function(){
+  var lm = /[?&]lang=(\w+)/.exec(Q); if (lm) setLang(lm[1]); else setLang(S.lang);
+  var h = location.hash.slice(1);
+  jump(scr[h] ? h : ORDER[0]);
+  if (scr[h] && !SHOT && !document.documentElement.classList.contains('appmode')) setTimeout(function(){ $('prototype').scrollIntoView(); }, 0);
+  if (/[?&]tour\b/.test(Q) && C.tour) tourInit();
+})();
+</script>
+</body>
+</html>
